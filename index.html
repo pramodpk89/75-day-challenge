@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="75 Day Challenge">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23000' width='180' height='180'/><text x='50%' y='50%' font-size='80' fill='%23FF9500' text-anchor='middle' dominant-baseline='middle' font-weight='800'>75</text></svg>">
+    <title>75 Day Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, 'SF Pro Display', system-ui, -webkit-system-font, sans-serif;
+            overflow-x: hidden;
+        }
+
+        @keyframes confetti {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            15%, 45%, 75% {
+                transform: translateX(-6px);
+            }
+            30%, 60%, 90% {
+                transform: translateX(6px);
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                opacity: 0;
+                transform: scale(1.4);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 20px;
+            padding-bottom: 48px;
+        }
+
+        .inner {
+            max-width: 430px;
+            width: 100%;
+            padding: 0 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .header-title.orange {
+            color: #FF9500;
+        }
+
+        .reset-badge {
+            font-size: 12px;
+            font-weight: 700;
+            color: #FF2D55;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(255, 45, 85, 0.15);
+        }
+
+        .activity-ring-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .activity-ring-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .activity-ring-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ring-day {
+            font-size: 56px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .ring-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .streak-pill {
+            display: flex;
+            justify-content: center;
+            margin: 12px 0 4px;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(255, 149, 0, 0.12);
+        }
+
+        .streak-emoji {
+            font-size: 14px;
+        }
+
+        .streak-text {
+            font-size: 13px;
+            font-weight: 700;
+            color: #FF9500;
+        }
+
+        .streak-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-left: 2px;
+        }
+
+        .quote-section {
+            padding: 16px 0 20px;
+            animation: fadeIn 0.6s 0.15s both ease;
+        }
+
+        .quote-text {
+            font-size: 15px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.45);
+            font-style: italic;
+            line-height: 1.6;
+            text-align: center;
+            margin: 0;
+        }
+
+        .quote-author {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+            text-align: center;
+            margin-top: 6px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .weight-section {
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            margin-bottom: 16px;
+        }
+
+        .weight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 14px;
+        }
+
+        .weight-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .weight-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1.2;
+            margin-top: 4px;
+        }
+
+        .weight-value-unit {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .weight-goal {
+            text-align: right;
+        }
+
+        .weight-goal-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #30D158;
+            margin-top: 4px;
+        }
+
+        .weight-setup {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .weight-setup-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .weight-setup-subtext {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-top: 2px;
+        }
+
+        .weight-input-wrapper {
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weight-input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .weight-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .weight-unit {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .burn-progress {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .burn-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .burn-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .burn-percentage {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .burn-stats {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .burn-stat {
+            flex: 1;
+        }
+
+        .burn-stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .burn-stat-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .burn-stat-right {
+            text-align: right;
+        }
+
+        .burn-stat-value-orange {
+            color: #FF9500;
+        }
+
+        .tasks-card {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 4px 20px;
+            margin-bottom: 12px;
+            animation: fadeIn 0.6s 0.3s both ease;
+        }
+
+        .tasks-header {
+            padding: 14px 0 4px;
+        }
+
+        .tasks-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .task-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            user-select: none;
+            transition: opacity 0.2s;
+        }
+
+        .task-row:last-child {
+            border-bottom: none;
+        }
+
+        .task-row:active {
+            opacity: 0.7;
+        }
+
+        .task-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
+        }
+
+        .task-icon.done {
+            background: #30D158;
+        }
+
+        .task-icon.done.blue {
+            background: #5AC8FA;
+        }
+
+        .task-label {
+            flex: 1;
+            font-size: 17px;
+            font-weight: 600;
+            color: #fff;
+            transition: all 0.2s;
+        }
+
+        .task-label.done {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: line-through;
+        }
+
+        .task-checkbox {
+            width: 26px;
+            height: 26px;
+            border-radius: 13px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .task-checkbox.done {
+            border-color: #30D158;
+            background: #30D158;
+        }
+
+        .task-checkbox.done.blue {
+            border-color: #5AC8FA;
+            background: #5AC8FA;
+        }
+
+        .checkmark {
+            width: 13px;
+            height: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkmark-svg {
+            stroke: #fff;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            fill: none;
+        }
+
+        .step-row {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .step-row:last-child {
+            border-bottom: none;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .step-label.done {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: line-through;
+        }
+
+        .step-badge {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .step-buttons {
+            display: flex;
+            gap: 8px;
+            padding-left: 50px;
+        }
+
+        .step-button {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.2s;
+        }
+
+        .step-button.active {
+            transition: all 0.2s;
+        }
+
+        .step-button.active-green {
+            background: #30D158;
+            color: #fff;
+        }
+
+        .step-button.active-yellow {
+            background: #FFD60A;
+            color: #000;
+        }
+
+        .all-done {
+            text-align: center;
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(48, 209, 88, 0.1);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .all-done-emoji {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .all-done-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: #30D158;
+        }
+
+        .all-done-subtext {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
+        }
+
+        .heatmap-section {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            margin-top: 12px;
+        }
+
+        .heatmap-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .heatmap-grid {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .heatmap-square {
+            width: 9px;
+            height: 9px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .heatmap-square.current {
+            background: #FF9500;
+            box-shadow: 0 0 8px rgba(255, 149, 0, 0.5);
+        }
+
+        .heatmap-square.completed {
+            background: #30D158;
+        }
+
+        .heatmap-square.missed {
+            background: #FF2D55;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.12);
+            padding: 20px 0 0;
+        }
+
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 200;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            animation: confetti;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: shake 0.5s ease;
+        }
+
+        .modal-content {
+            background: #1c1c1e;
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: center;
+            max-width: 320px;
+            width: 100%;
+            animation: pop 0.3s ease;
+        }
+
+        .modal-emoji {
+            font-size: 56px;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #FF2D55;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 8px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: #FF2D55;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .completion-screen {
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 40px;
+        }
+
+        .completion-emoji {
+            font-size: 80px;
+            margin-bottom: 16px;
+        }
+
+        .completion-label {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #FF9500;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .completion-title {
+            font-size: 40px;
+            font-weight: 800;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .completion-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // ─── CONSTANTS ─── //
+        const QUOTES = [
+            { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
+            { text: "We do not rise to the level of our goals. We fall to the level of our systems.", author: "James Clear" },
+            { text: "You will never always be motivated. You have to learn to be disciplined.", author: "Unknown" },
+            { text: "It's supposed to be hard. If it were easy, everyone would do it.", author: "Tom Hanks" },
+            { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+            { text: "Your body can stand almost anything. It's your mind you have to convince.", author: "Unknown" },
+            { text: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
+            { text: "If you're tired of starting over, stop giving up.", author: "Unknown" },
+            { text: "No one is coming to save you. This life is 100% your responsibility.", author: "Unknown" },
+            { text: "Your future self is watching you right now through memories.", author: "Unknown" },
+            { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+            { text: "Discipline equals freedom.", author: "Jocko Willink" },
+            { text: "You didn't come this far to only come this far.", author: "Unknown" },
+            { text: "Nobody cares. Work harder.", author: "Unknown" },
+            { text: "Day by day, what you do is who you become.", author: "Heraclitus" },
+            { text: "The body does not want you to do this. You cannot listen to it.", author: "David Goggins" },
+            { text: "Don't stop when you're tired. Stop when you're done.", author: "David Goggins" },
+            { text: "Lock in.", author: "Unknown" },
+            { text: "75 days. No shortcuts. No excuses. Just results.", author: "Unknown" },
+            { text: "The pain you feel today will be the strength you feel tomorrow.", author: "Unknown" },
+            { text: "Obsessed is a word the lazy use to describe the dedicated.", author: "Unknown" },
+            { text: "Comfort is the enemy of achievement.", author: "Farrah Gray" },
+            { text: "Make yourself proud.", author: "Unknown" },
+            { text: "You are one decision away from a completely different life.", author: "Unknown" },
+            { text: "Eat clean. Walk far. Train hard. Repeat.", author: "Unknown" },
+        ];
+
+        // ─── HELPERS ─── //
+        const getToday = () => {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        };
+
+        const defaultState = () => ({
+            startDate: getToday(),
+            currentDay: 1,
+            resets: 0,
+            days: {},
+            completed: false,
+            currentWeight: null,
+        });
+
+        // ─── STATE MANAGEMENT ─── //
+        let state = loadState();
+        let showConfetti = false;
+        let showReset = false;
+
+        function loadState() {
+            const saved = localStorage.getItem("75day_challenge");
+            return saved ? JSON.parse(saved) : defaultState();
+        }
+
+        function saveState() {
+            localStorage.setItem("75day_challenge", JSON.stringify(state));
+            render();
+        }
+
+        function update(key, val) {
+            const today = getToday();
+            const todayData = state.days[today] || { diet: false, steps: "none", workout: false, protein: false };
+            const updated = { ...todayData, [key]: val };
+            const wasAllDone = todayData.diet && (todayData.steps === "10k" || todayData.steps === "5k") && todayData.workout && todayData.protein;
+            const nowAllDone = updated.diet && (updated.steps === "10k" || updated.steps === "5k") && updated.workout && updated.protein;
+
+            state.days[today] = updated;
+
+            if (nowAllDone && !wasAllDone) {
+                showConfetti = true;
+                setTimeout(() => { showConfetti = false; render(); }, 3000);
+            }
+
+            if (nowAllDone && state.currentDay >= 75) {
+                state.completed = true;
+            }
+
+            saveState();
+        }
+
+        function resetChallenge() {
+            state = { ...defaultState(), resets: state.resets + 1, currentWeight: state.currentWeight };
+            showReset = false;
+            saveState();
+        }
+
+        function setWeight(w) {
+            state.currentWeight = w;
+            saveState();
+        }
+
+        // ─── RENDER FUNCTIONS ─── //
+        function createActivityRing(day, allDone, tasksCompleted) {
+            const total = 75;
+            const pct = ((day - 1) / total) * 100;
+            const cx = 100, cy = 100, r = 80, stroke = 14;
+            const circ = 2 * Math.PI * r;
+            const offset = circ - (pct / 100) * circ;
+
+            const taskPct = (tasksCompleted / 4) * 100;
+            const r2 = 62, circ2 = 2 * Math.PI * r2, offset2 = circ2 - (taskPct / 100) * circ2;
+
+            return `
+                <div class="activity-ring-wrapper">
+                    <svg class="activity-ring-svg" width="200" height="200" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#FF2D55" />
+                                <stop offset="100%" stop-color="#FF9500" />
+                            </linearGradient>
+                            <linearGradient id="rg2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#30D158" />
+                                <stop offset="100%" stop-color="#63E6BE" />
+                            </linearGradient>
+                            <filter id="rGlow">
+                                <feGaussianBlur stdDeviation="3" result="b" />
+                                <feMerge>
+                                    <feMergeNode in="b" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- outer track -->
+                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,45,85,0.15)" stroke-width="${stroke}" />
+                        <!-- outer progress -->
+                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#rg1)" stroke-width="${stroke}"
+                            stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"
+                            filter="url(#rGlow)" style="transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)" />
+                        <!-- inner track -->
+                        <circle cx="${cx}" cy="${cy}" r="${r2}" fill="none" stroke="rgba(48,209,88,0.12)" stroke-width="${stroke}" />
+                        <!-- inner progress -->
+                        <circle cx="${cx}" cy="${cy}" r="${r2}" fill="none" stroke="url(#rg2)" stroke-width="${stroke}"
+                            stroke-dasharray="${circ2}" stroke-dashoffset="${offset2}" stroke-linecap="round"
+                            style="transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1)" />
+                    </svg>
+                    <div class="activity-ring-center">
+                        <div class="ring-day">${day}</div>
+                        <div class="ring-label">of 75</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTaskRow(icon, label, done, onTap, color = "#30D158") {
+            const isDone = done ? "done" : "";
+            const isBlue = color === "#5AC8FA" ? "blue" : "";
+            return `
+                <div class="task-row" onclick="${onTap}">
+                    <div class="task-icon ${isDone} ${isBlue}">${icon}</div>
+                    <div class="task-label ${isDone}">${label}</div>
+                    <div class="task-checkbox ${isDone} ${isBlue}">
+                        ${done ? '<svg class="checkmark-svg" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" /></svg>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createStepRow(value) {
+            const is10k = value === "10k";
+            const is5k = value === "5k";
+            const isDone = is10k || is5k;
+            const color = is10k ? "#30D158" : is5k ? "#FFD60A" : "rgba(255,255,255,0.08)";
+            const iconBg = isDone ? color : "rgba(255,255,255,0.08)";
+
+            return `
+                <div class="step-row">
+                    <div class="step-header">
+                        <div class="step-icon" style="background: ${iconBg}">🚶</div>
+                        <div class="step-content">
+                            <div class="step-label ${isDone ? 'done' : ''}">Steps</div>
+                        </div>
+                        ${isDone ? `<span class="step-badge" style="color: ${color}">${is10k ? '10K' : '5K'}</span>` : ''}
+                    </div>
+                    <div class="step-buttons">
+                        <button class="step-button ${is10k ? 'active-green' : ''}" onclick="update('steps', '${is10k ? 'none' : '10k'}')">10,000+</button>
+                        <button class="step-button ${is5k ? 'active-yellow' : ''}" onclick="update('steps', '${is5k ? 'none' : '5k'}')">5,000+</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createWeightSection() {
+            const w = state.currentWeight;
+
+            if (!w) {
+                return `
+                    <div class="weight-setup" onclick="startWeightEdit()">
+                        <div class="weight-setup-text">Tap to set your weight</div>
+                        <div class="weight-setup-subtext">Unlock the 1kg burn tracker</div>
+                    </div>
+                `;
+            }
+
+            const target = Math.floor(w) === w ? w - 1 : Math.floor(w);
+            const kgToLose = w - target;
+            const totalSteps = Object.values(state.days).reduce((s, d) => s + (d.steps === "10k" ? 10000 : d.steps === "5k" ? 5000 : 0), 0);
+            const calPerStep = w * 0.000563;
+            const stepsNeeded = Math.round((kgToLose * 7700) / calPerStep);
+            const progress = Math.min(totalSteps / stepsNeeded, 1);
+            const remaining = Math.max(stepsNeeded - totalSteps, 0);
+            const daysLeft = Math.ceil(remaining / 10000);
+            const progressGradient = progress < 0.5 ? "linear-gradient(90deg, #FF9500, #FF2D55)" : "linear-gradient(90deg, #30D158, #63E6BE)";
+
+            return `
+                <div class="weight-section">
+                    <div class="weight-header">
+                        <div>
+                            <div class="weight-label">Weight</div>
+                            <div class="weight-value" onclick="startWeightEdit()">
+                                ${w}<span class="weight-value-unit"> kg</span>
+                            </div>
+                        </div>
+                        <div class="weight-goal">
+                            <div class="weight-label">Goal</div>
+                            <div class="weight-goal-value">${target.toFixed(1)}</div>
+                        </div>
+                    </div>
+                    <div class="burn-progress">
+                        <div class="burn-header">
+                            <span class="burn-label">Steps to ${target.toFixed(1)} kg</span>
+                            <span class="burn-percentage">${Math.round(progress * 100)}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress * 100}%; background: ${progressGradient}"></div>
+                        </div>
+                        <div class="burn-stats">
+                            <div class="burn-stat">
+                                <div class="burn-stat-value">${remaining.toLocaleString()}</div>
+                                <div class="burn-stat-label">steps left</div>
+                            </div>
+                            <div class="burn-stat burn-stat-right">
+                                <div class="burn-stat-value burn-stat-value-orange">~${daysLeft}d</div>
+                                <div class="burn-stat-label">at 10k/day</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createHeatmap() {
+            const today = getToday();
+            let squares = '';
+
+            for (let i = 0; i < 75; i++) {
+                const dayDate = new Date(state.startDate + "T00:00:00");
+                dayDate.setDate(dayDate.getDate() + i);
+                const ds = `${dayDate.getFullYear()}-${String(dayDate.getMonth() + 1).padStart(2, "0")}-${String(dayDate.getDate()).padStart(2, "0")}`;
+                const isCurrent = i + 1 === state.currentDay && ds === today;
+                const isPast = i + 1 < state.currentDay;
+                const dd = state.days[ds];
+                const passed = dd && dd.diet && (dd.steps === "10k" || dd.steps === "5k") && dd.workout && dd.protein;
+
+                let className = "heatmap-square";
+                if (isCurrent) className += " current";
+                else if (isPast && passed) className += " completed";
+                else if (isPast) className += " missed";
+
+                squares += `<div class="${className}"></div>`;
+            }
+
+            return `
+                <div class="heatmap-section">
+                    <div class="heatmap-title">Journey</div>
+                    <div class="heatmap-grid">${squares}</div>
+                </div>
+            `;
+        }
+
+        function render() {
+            const app = document.getElementById("app");
+            const today = getToday();
+            const td = state.days[today] || { diet: false, steps: "none", workout: false, protein: false };
+            const stepsOk = td.steps === "10k" || td.steps === "5k";
+            const allDone = td.diet && stepsOk && td.workout && td.protein;
+            const tasksCompleted = [td.diet, stepsOk, td.workout, td.protein].filter(Boolean).length;
+            const qi = (state.currentDay - 1) % QUOTES.length;
+
+            if (state.completed) {
+                app.innerHTML = `
+                    <div class="completion-screen">
+                        ${showConfetti ? '<div class="confetti-container" id="confetti"></div>' : ''}
+                        <div class="completion-emoji">🏆</div>
+                        <div class="completion-label">Challenge Complete</div>
+                        <div class="completion-title">75 Days of<br>Discipline</div>
+                        <div class="completion-subtitle">You're not the same person<br>who started this.</div>
+                    </div>
+                `;
+                if (showConfetti) createConfetti();
+                return;
+            }
+
+            const streakLabel = state.currentDay < 10 ? "Building momentum" : state.currentDay < 30 ? "Getting dangerous" : state.currentDay < 60 ? "Unstoppable" : "Legendary";
+            const resetBadge = state.resets > 0 ? `<div class="reset-badge">${state.resets}x reset</div>` : '';
+            const streakPill = state.currentDay > 1 ? `
+                <div class="streak-pill">
+                    <div class="streak-badge">
+                        <span class="streak-emoji">🔥</span>
+                        <span class="streak-text">${state.currentDay - 1} day streak</span>
+                        <span class="streak-label">${streakLabel}</span>
+                    </div>
+                </div>
+            ` : '';
+            const allDoneBanner = allDone ? `
+                <div class="all-done">
+                    <div class="all-done-emoji">✅</div>
+                    <div class="all-done-text">Day ${state.currentDay} Complete</div>
+                    <div class="all-done-subtext">See you tomorrow.</div>
+                </div>
+            ` : '';
+            const resetModal = showReset ? `
+                <div class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-emoji">💀</div>
+                        <div class="modal-title">RESET</div>
+                        <div class="modal-text">You missed a day.<br>Back to Day 1.</div>
+                        <button class="modal-button" onclick="resetChallenge()">Restart Challenge</button>
+                    </div>
+                </div>
+            ` : '';
+
+            app.innerHTML = `
+                ${resetModal}
+                ${showConfetti ? '<div class="confetti-container" id="confetti"></div>' : ''}
+                <div class="container">
+                    <div class="inner">
+                        <div class="header">
+                            <div>
+                                <div class="header-title">75 Day</div>
+                                <div class="header-title orange">Challenge</div>
+                            </div>
+                            ${resetBadge}
+                        </div>
+                        ${createActivityRing(state.currentDay, allDone, tasksCompleted)}
+                        ${streakPill}
+                        <div class="quote-section">
+                            <p class="quote-text">"${QUOTES[qi].text}"</p>
+                            <p class="quote-author">${QUOTES[qi].author}</p>
+                        </div>
+                        ${createWeightSection()}
+                        <div class="tasks-card">
+                            <div class="tasks-header">
+                                <div class="tasks-title">Today's Mission</div>
+                            </div>
+                            ${createTaskRow("🥗", "Clean Diet", td.diet, "update('diet', " + !td.diet + ")")}
+                            ${createStepRow(td.steps)}
+                            ${createTaskRow("🏋️", "Gym Session", td.workout, "update('workout', " + !td.workout + ")")}
+                            ${createTaskRow("🫘", "100g Protein", td.protein, "update('protein', " + !td.protein + ")", "#5AC8FA")}
+                        </div>
+                        ${allDoneBanner}
+                        ${createHeatmap()}
+                        <div class="footer">
+                            ${state.resets === 0 ? "First attempt. Make it count." : `Attempt ${state.resets + 1}. This time is different.`}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if (showConfetti) createConfetti();
+        }
+
+        function startWeightEdit() {
+            const w = state.currentWeight || "";
+            const input = prompt("Enter your weight (kg):", w);
+            if (input !== null) {
+                const parsed = parseFloat(input);
+                if (parsed > 0 && parsed < 500) {
+                    setWeight(parsed);
+                }
+            }
+        }
+
+        function createConfetti() {
+            const container = document.getElementById("confetti");
+            if (!container) return;
+
+            const colors = ["#FF2D55", "#FF9500", "#30D158", "#5AC8FA", "#BF5AF2", "#FFD60A"];
+
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement("div");
+                piece.className = "confetti-piece";
+                const size = 5 + Math.random() * 7;
+                piece.style.left = Math.random() * 100 + "%";
+                piece.style.top = "-10px";
+                piece.style.width = size + "px";
+                piece.style.height = (size * 1.3) + "px";
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.borderRadius = "2px";
+                piece.style.animationDuration = (1.5 + Math.random() * 2) + "s";
+                piece.style.animationDelay = (Math.random() * 0.6) + "s";
+                container.appendChild(piece);
+            }
+        }
+
+        // ─── INITIALIZATION ─── //
+        render();
+
+        // ─── SERVICE WORKER ─── //
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js").catch(() => {});
+        }
+    </script>
+</body>
+</html>
