@@ -1,1176 +1,1287 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="75 Day Challenge">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23000' width='180' height='180'/><text x='50%' y='50%' font-size='80' fill='%23FF9500' text-anchor='middle' dominant-baseline='middle' font-weight='800'>75</text></svg>">
-    <title>75 Day Challenge</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: #fff;
-            font-family: -apple-system, 'SF Pro Display', system-ui, -webkit-system-font, sans-serif;
-            overflow-x: hidden;
-        }
-
-        @keyframes confetti {
-            0% {
-                opacity: 1;
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(100vh) rotate(720deg);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            15%, 45%, 75% {
-                transform: translateX(-6px);
-            }
-            30%, 60%, 90% {
-                transform: translateX(6px);
-            }
-        }
-
-        @keyframes pop {
-            0% {
-                opacity: 0;
-                transform: scale(1.4);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
-        .container {
-            min-height: 100vh;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 20px;
-            padding-bottom: 48px;
-        }
-
-        .inner {
-            max-width: 430px;
-            width: 100%;
-            padding: 0 24px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .header-title {
-            font-size: 28px;
-            font-weight: 800;
-            line-height: 1.1;
-        }
-
-        .header-title.orange {
-            color: #FF9500;
-        }
-
-        .reset-badge {
-            font-size: 12px;
-            font-weight: 700;
-            color: #FF2D55;
-            padding: 4px 10px;
-            border-radius: 8px;
-            background: rgba(255, 45, 85, 0.15);
-        }
-
-        .activity-ring-wrapper {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .activity-ring-svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .activity-ring-center {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .ring-day {
-            font-size: 56px;
-            font-weight: 800;
-            color: #fff;
-            line-height: 1;
-            letter-spacing: -2px;
-        }
-
-        .ring-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 2px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .streak-pill {
-            display: flex;
-            justify-content: center;
-            margin: 12px 0 4px;
-        }
-
-        .streak-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(255, 149, 0, 0.12);
-        }
-
-        .streak-emoji {
-            font-size: 14px;
-        }
-
-        .streak-text {
-            font-size: 13px;
-            font-weight: 700;
-            color: #FF9500;
-        }
-
-        .streak-label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-left: 2px;
-        }
-
-        .quote-section {
-            padding: 16px 0 20px;
-            animation: fadeIn 0.6s 0.15s both ease;
-        }
-
-        .quote-text {
-            font-size: 15px;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.45);
-            font-style: italic;
-            line-height: 1.6;
-            text-align: center;
-            margin: 0;
-        }
-
-        .quote-author {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            margin-top: 6px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .weight-section {
-            padding: 16px 20px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.06);
-            margin-bottom: 16px;
-        }
-
-        .weight-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 14px;
-        }
-
-        .weight-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.35);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .weight-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: #fff;
-            cursor: pointer;
-            line-height: 1.2;
-            margin-top: 4px;
-        }
-
-        .weight-value-unit {
-            font-size: 16px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .weight-goal {
-            text-align: right;
-        }
-
-        .weight-goal-value {
-            font-size: 22px;
-            font-weight: 800;
-            color: #30D158;
-            margin-top: 4px;
-        }
-
-        .weight-setup {
-            padding: 20px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.06);
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .weight-setup-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .weight-setup-subtext {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.25);
-            margin-top: 2px;
-        }
-
-        .weight-input-wrapper {
-            padding: 16px 20px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.06);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .weight-input {
-            flex: 1;
-            padding: 10px 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            outline: none;
-            font-family: inherit;
-        }
-
-        .weight-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .weight-unit {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .burn-progress {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 12px;
-            padding: 12px 14px;
-        }
-
-        .burn-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .burn-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .burn-percentage {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.8s ease;
-        }
-
-        .burn-stats {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .burn-stat {
-            flex: 1;
-        }
-
-        .burn-stat-value {
-            font-size: 18px;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .burn-stat-label {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .burn-stat-right {
-            text-align: right;
-        }
-
-        .burn-stat-value-orange {
-            color: #FF9500;
-        }
-
-        .tasks-card {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 4px 20px;
-            margin-bottom: 12px;
-            animation: fadeIn 0.6s 0.3s both ease;
-        }
-
-        .tasks-header {
-            padding: 14px 0 4px;
-        }
-
-        .tasks-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.25);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .task-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            cursor: pointer;
-            user-select: none;
-            transition: opacity 0.2s;
-        }
-
-        .task-row:last-child {
-            border-bottom: none;
-        }
-
-        .task-row:active {
-            opacity: 0.7;
-        }
-
-        .task-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            background: rgba(255, 255, 255, 0.08);
-            transition: all 0.3s;
-        }
-
-        .task-icon.done {
-            background: #30D158;
-        }
-
-        .task-icon.done.blue {
-            background: #5AC8FA;
-        }
-
-        .task-label {
-            flex: 1;
-            font-size: 17px;
-            font-weight: 600;
-            color: #fff;
-            transition: all 0.2s;
-        }
-
-        .task-label.done {
-            color: rgba(255, 255, 255, 0.4);
-            text-decoration: line-through;
-        }
-
-        .task-checkbox {
-            width: 26px;
-            height: 26px;
-            border-radius: 13px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .task-checkbox.done {
-            border-color: #30D158;
-            background: #30D158;
-        }
-
-        .task-checkbox.done.blue {
-            border-color: #5AC8FA;
-            background: #5AC8FA;
-        }
-
-        .checkmark {
-            width: 13px;
-            height: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .checkmark-svg {
-            stroke: #fff;
-            stroke-width: 3.5;
-            stroke-linecap: round;
-            fill: none;
-        }
-
-        .step-row {
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .step-row:last-child {
-            border-bottom: none;
-        }
-
-        .step-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 10px;
-        }
-
-        .step-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s;
-        }
-
-        .step-content {
-            flex: 1;
-        }
-
-        .step-label {
-            font-size: 17px;
-            font-weight: 600;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .step-label.done {
-            color: rgba(255, 255, 255, 0.4);
-            text-decoration: line-through;
-        }
-
-        .step-badge {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .step-buttons {
-            display: flex;
-            gap: 8px;
-            padding-left: 50px;
-        }
-
-        .step-button {
-            flex: 1;
-            padding: 10px 0;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.5);
-            transition: all 0.2s;
-        }
-
-        .step-button.active {
-            transition: all 0.2s;
-        }
-
-        .step-button.active-green {
-            background: #30D158;
-            color: #fff;
-        }
-
-        .step-button.active-yellow {
-            background: #FFD60A;
-            color: #000;
-        }
-
-        .all-done {
-            text-align: center;
-            padding: 20px;
-            border-radius: 16px;
-            background: rgba(48, 209, 88, 0.1);
-            animation: fadeIn 0.4s ease;
-        }
-
-        .all-done-emoji {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-
-        .all-done-text {
-            font-size: 17px;
-            font-weight: 700;
-            color: #30D158;
-        }
-
-        .all-done-subtext {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 2px;
-        }
-
-        .heatmap-section {
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.04);
-            margin-top: 12px;
-        }
-
-        .heatmap-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.25);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .heatmap-grid {
-            display: flex;
-            gap: 3px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .heatmap-square {
-            width: 9px;
-            height: 9px;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .heatmap-square.current {
-            background: #FF9500;
-            box-shadow: 0 0 8px rgba(255, 149, 0, 0.5);
-        }
-
-        .heatmap-square.completed {
-            background: #30D158;
-        }
-
-        .heatmap-square.missed {
-            background: #FF2D55;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.12);
-            padding: 20px 0 0;
-        }
-
-        .confetti-container {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 200;
-            overflow: hidden;
-        }
-
-        .confetti-piece {
-            position: absolute;
-            animation: confetti;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            animation: shake 0.5s ease;
-        }
-
-        .modal-content {
-            background: #1c1c1e;
-            border-radius: 20px;
-            padding: 36px 28px;
-            text-align: center;
-            max-width: 320px;
-            width: 100%;
-            animation: pop 0.3s ease;
-        }
-
-        .modal-emoji {
-            font-size: 56px;
-            margin-bottom: 8px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: #FF2D55;
-        }
-
-        .modal-text {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-top: 8px;
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
-        .modal-button {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            background: #FF2D55;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .completion-screen {
-            min-height: 100vh;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            padding: 40px;
-        }
-
-        .completion-emoji {
-            font-size: 80px;
-            margin-bottom: 16px;
-        }
-
-        .completion-label {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            color: #FF9500;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .completion-title {
-            font-size: 40px;
-            font-weight: 800;
-            text-align: center;
-            line-height: 1.1;
-        }
-
-        .completion-subtitle {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-top: 12px;
-            text-align: center;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .show {
-            display: block;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="75 Days">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23000' width='180' height='180'/><text x='50%25' y='50%25' font-size='80' fill='%23FF9500' text-anchor='middle' dominant-baseline='middle' font-weight='800'>75</text></svg>">
+<title>75 Day Challenge</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:-apple-system,'SF Pro Display',system-ui,sans-serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+
+@keyframes confetti{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}15%,45%,75%{transform:translateX(-6px)}30%,60%,90%{transform:translateX(6px)}}
+@keyframes pop{0%{opacity:0;transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ WELCOME ═══ */
+.welcome{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.welcome-ring{width:100px;height:100px;margin-bottom:24px}
+.welcome-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.welcome-logo{font-size:64px;font-weight:900;color:#FF9500;line-height:1;letter-spacing:-3px}
+.welcome-sub{font-size:15px;font-weight:600;color:rgba(255,255,255,0.35);letter-spacing:3px;text-transform:uppercase;margin-bottom:40px}
+.welcome-tag{font-size:14px;color:rgba(255,255,255,0.3);max-width:280px;line-height:1.7;margin-bottom:36px}
+.welcome-form{width:100%;max-width:320px}
+.welcome-field{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff;font-size:16px;font-weight:600;outline:none;font-family:inherit;margin-bottom:12px;text-align:center}
+.welcome-field::placeholder{color:rgba(255,255,255,0.25);font-weight:400}
+.welcome-field:focus{border-color:rgba(255,149,0,0.5)}
+.welcome-btn{width:100%;padding:16px;border-radius:14px;border:none;background:#FF9500;color:#fff;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:transform 0.15s}
+.welcome-btn:active{transform:scale(0.97)}
+.welcome-skip{font-size:13px;color:rgba(255,255,255,0.2);margin-top:16px;cursor:pointer}
+
+.container{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+.inner{max-width:430px;width:100%;padding:0 24px}
+
+/* Profile bar */
+.profile-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);cursor:pointer;transition:background 0.2s}
+.profile-bar:active{background:rgba(255,255,255,0.08)}
+.profile-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,149,0,0.2);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#FF9500;flex-shrink:0}
+.profile-name{font-size:14px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.profile-edit-icon{font-size:12px;color:rgba(255,255,255,0.2)}
+
+/* Profile edit sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#1c1c1e;border-radius:20px 20px 0 0;width:100%;max-width:430px;padding:20px 24px calc(24px + env(safe-area-inset-bottom,0px));animation:slideUp 0.3s ease}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);margin:0 auto 20px}
+.sheet-title{font-size:18px;font-weight:800;margin-bottom:20px}
+.sheet-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;margin-top:16px}
+.sheet-label:first-of-type{margin-top:0}
+.sheet-input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.3);color:#fff;font-size:16px;font-weight:600;outline:none;font-family:inherit}
+.sheet-input:focus{border-color:rgba(255,149,0,0.5)}
+.sheet-row{display:flex;gap:10px;margin-top:20px}
+.sheet-save{flex:1;padding:14px;border-radius:12px;border:none;background:#FF9500;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.sheet-cancel{flex:1;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.5);font-size:15px;font-weight:600;cursor:pointer}
+.sheet-danger{width:100%;padding:12px;border-radius:10px;border:none;background:rgba(255,45,85,0.12);color:#FF2D55;font-size:13px;font-weight:600;cursor:pointer;margin-top:20px}
+
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.header-title{font-size:28px;font-weight:800;line-height:1.1}
+.header-title.orange{color:#FF9500}
+.reset-badge{font-size:12px;font-weight:700;color:#FF2D55;padding:4px 10px;border-radius:8px;background:rgba(255,45,85,0.15)}
+
+/* Ring */
+.ring-wrap{position:relative;width:200px;height:200px;margin:0 auto;animation:fadeIn 0.6s ease}
+.ring-svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-day{font-size:56px;font-weight:800;line-height:1;letter-spacing:-2px}
+.ring-sub{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+
+/* Streak */
+.streak{display:flex;justify-content:center;margin:12px 0 4px}
+.streak-inner{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(255,149,0,0.12)}
+.streak-fire{font-size:14px}
+.streak-count{font-size:13px;font-weight:700;color:#FF9500}
+.streak-label{font-size:11px;color:rgba(255,255,255,0.3);margin-left:2px}
+
+/* Quote */
+.quote{padding:16px 0 20px;animation:fadeIn 0.6s 0.15s both ease}
+.quote-text{font-size:15px;font-weight:400;color:rgba(255,255,255,0.45);font-style:italic;line-height:1.6;text-align:center}
+.quote-author{font-size:11px;color:rgba(255,255,255,0.2);text-align:center;margin-top:6px;letter-spacing:1px;text-transform:uppercase}
+
+/* Weight */
+.weight-card{padding:16px 20px;border-radius:16px;background:rgba(255,255,255,0.06);margin-bottom:16px}
+.weight-prompt{padding:20px;border-radius:16px;background:rgba(255,255,255,0.06);cursor:pointer;text-align:center;margin-bottom:16px}
+.weight-prompt-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5)}
+.weight-prompt-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px}
+.weight-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.weight-lbl{font-size:12px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px}
+.weight-val{font-size:28px;font-weight:800;cursor:pointer;line-height:1.2;margin-top:4px}
+.weight-unit{font-size:16px;font-weight:500;color:rgba(255,255,255,0.4)}
+.weight-goal{text-align:right}
+.weight-goal-val{font-size:22px;font-weight:800;color:#30D158;margin-top:4px}
+.weight-input-wrap{padding:16px 20px;border-radius:16px;background:rgba(255,255,255,0.06);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.weight-input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.3);color:#fff;font-size:18px;font-weight:700;outline:none;font-family:inherit}
+.weight-input::placeholder{color:rgba(255,255,255,0.3)}
+.weight-save-btn{padding:10px 16px;border-radius:10px;border:none;background:#FF9500;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.burn-box{background:rgba(0,0,0,0.25);border-radius:12px;padding:12px 14px}
+.burn-top{display:flex;justify-content:space-between;margin-bottom:6px}
+.burn-lbl{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5)}
+.burn-pct{font-size:12px;color:rgba(255,255,255,0.3)}
+.bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.8s ease}
+.burn-stats{display:flex;justify-content:space-between}
+.burn-num{font-size:18px;font-weight:800}
+.burn-sub{font-size:10px;color:rgba(255,255,255,0.3)}
+.burn-right{text-align:right}
+.burn-orange{color:#FF9500}
+
+/* Tasks */
+.tasks-card{background:rgba(255,255,255,0.06);border-radius:16px;padding:4px 20px;margin-bottom:12px;animation:fadeIn 0.6s 0.3s both ease}
+.tasks-hdr{padding:14px 0 4px;display:flex;justify-content:space-between;align-items:center}
+.tasks-title{font-size:12px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px}
+.tasks-date{font-size:12px;font-weight:600;color:rgba(255,255,255,0.2)}
+.tasks-readonly{font-size:11px;color:rgba(255,255,255,0.15);text-align:center;padding:6px 0 10px;letter-spacing:0.5px}
+
+/* Day nav bar (when viewing another day) */
+.day-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-radius:12px;background:rgba(255,149,0,0.08);margin-bottom:16px;animation:fadeIn 0.3s ease}
+.day-nav-label{font-size:14px;font-weight:700;color:#FF9500}
+.day-nav-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:1px}
+.day-nav-back{padding:8px 14px;border-radius:8px;border:none;background:rgba(255,149,0,0.2);color:#FF9500;font-size:12px;font-weight:700;cursor:pointer}
+
+.task-row{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none;-webkit-user-select:none;transition:opacity 0.15s}
+.task-row:active{opacity:0.7}
+.task-row:last-child{border-bottom:none}
+.task-row.readonly{cursor:default;opacity:0.6}
+.task-row.readonly:active{opacity:0.6}
+.task-icon-box{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(255,255,255,0.08);transition:background 0.3s;flex-shrink:0}
+.task-icon-box.green{background:#30D158}
+.task-icon-box.blue{background:#5AC8FA}
+.task-name{flex:1;font-size:17px;font-weight:600;transition:all 0.2s}
+.task-name.done{color:rgba(255,255,255,0.4);text-decoration:line-through}
+.task-check{width:26px;height:26px;border-radius:13px;border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;transition:all 0.3s;flex-shrink:0}
+.task-check.green{border-color:#30D158;background:#30D158}
+.task-check.blue{border-color:#5AC8FA;background:#5AC8FA}
+.task-check svg{width:13px;height:13px}
+
+/* Steps row */
+.step-row{padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.step-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.step-badge{font-size:13px;font-weight:700;letter-spacing:0.5px}
+.step-btns{display:flex;gap:8px;padding-left:50px}
+.step-btn{flex:1;padding:10px 0;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:700;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.step-btn.g{background:#30D158;color:#fff}
+.step-btn.y{background:#FFD60A;color:#000}
+.step-btn:disabled{opacity:0.4;cursor:default}
+
+/* Done / next day */
+.done-banner{text-align:center;padding:20px;border-radius:16px;background:rgba(48,209,88,0.1);animation:fadeIn 0.4s ease;margin-bottom:12px}
+.done-emoji{font-size:20px;margin-bottom:4px}
+.done-text{font-size:17px;font-weight:700;color:#30D158}
+.done-sub{font-size:13px;color:rgba(255,255,255,0.3);margin-top:2px}
+.done-next{font-size:12px;color:#FF9500;font-weight:600;margin-top:8px;letter-spacing:0.5px}
+
+/* Heatmap */
+.heatmap{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,0.04);margin-top:12px}
+.heatmap-title{font-size:11px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.heatmap-grid{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.dot{width:9px;height:9px;border-radius:2px;background:rgba(255,255,255,0.05);cursor:pointer;transition:transform 0.15s}
+.dot:active{transform:scale(1.5)}
+.dot.now{background:#FF9500;box-shadow:0 0 8px rgba(255,149,0,0.5)}
+.dot.ok{background:#30D158}
+.dot.miss{background:#FF2D55}
+.dot.selected{outline:2px solid #fff;outline-offset:1px;transform:scale(1.3)}
+.dot.future{cursor:default;opacity:0.5}
+.dot.future:active{transform:none}
+
+.footer{text-align:center;font-size:11px;color:rgba(255,255,255,0.12);padding:20px 0 0}
+
+/* Confetti */
+.confetti-box{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.confetti-p{position:absolute;border-radius:2px;animation-name:confetti;animation-fill-mode:forwards}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;animation:shake 0.5s ease}
+.modal-box{background:#1c1c1e;border-radius:20px;padding:36px 28px;text-align:center;max-width:320px;width:100%;animation:pop 0.3s ease}
+.modal-emoji{font-size:56px;margin-bottom:8px}
+.modal-title{font-size:24px;font-weight:800;color:#FF2D55}
+.modal-desc{font-size:14px;color:rgba(255,255,255,0.4);margin-top:8px;margin-bottom:24px;line-height:1.5}
+.modal-btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:16px;font-weight:700;cursor:pointer}
+.modal-btn.red{background:#FF2D55;color:#fff}
+
+/* Completion */
+.complete{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center}
+.complete-trophy{font-size:80px;margin-bottom:16px}
+.complete-label{font-size:13px;font-weight:700;letter-spacing:4px;color:#FF9500;text-transform:uppercase;margin-bottom:8px}
+.complete-title{font-size:40px;font-weight:800;line-height:1.1}
+.complete-sub{font-size:16px;color:rgba(255,255,255,0.4);margin-top:12px;line-height:1.5}
+.complete-restart{margin-top:32px;padding:14px 32px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.5);font-size:14px;font-weight:600;cursor:pointer}
+
+/* Countdown timer */
+.countdown{text-align:center;padding:10px 0 6px;animation:fadeIn 0.4s ease}
+.countdown-time{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.countdown-time.green{color:rgba(48,209,88,0.6)}
+.countdown-time.orange{color:#FF9500}
+.countdown-time.red{color:#FF2D55;animation:pulse 1s ease infinite}
+.countdown-lbl{font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;letter-spacing:0.5px}
+@keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+
+/* Milestone banner */
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(255,149,0,0.0)}50%{box-shadow:0 0 30px rgba(255,149,0,0.3)}}
+.milestone{text-align:center;padding:16px 20px;border-radius:16px;background:rgba(255,149,0,0.08);border:1px solid rgba(255,149,0,0.15);margin-bottom:16px;animation:glow 2s ease infinite,fadeIn 0.6s ease}
+.milestone-emoji{font-size:28px;margin-bottom:4px}
+.milestone-title{font-size:15px;font-weight:800;color:#FF9500}
+.milestone-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-top:2px}
+
+/* Journal */
+.journal{padding:16px 20px;border-radius:16px;background:rgba(255,255,255,0.04);margin-bottom:12px;animation:fadeIn 0.4s ease}
+.journal-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.journal-input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);color:#fff;font-size:14px;font-weight:500;outline:none;font-family:inherit}
+.journal-input:focus{border-color:rgba(255,149,0,0.3)}
+.journal-input::placeholder{color:rgba(255,255,255,0.3);font-style:italic}
+.journal-saved{font-size:14px;color:rgba(255,255,255,0.35);font-style:italic;line-height:1.5}
+.journal-edit{font-size:11px;color:rgba(255,149,0,0.5);cursor:pointer;margin-top:4px}
+.journal-past{padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);margin-bottom:8px}
+.journal-past-day{font-size:11px;font-weight:700;color:rgba(255,255,255,0.2);margin-bottom:2px}
+.journal-past-text{font-size:13px;color:rgba(255,255,255,0.45);font-style:italic;line-height:1.4}
+
+/* Weight sparkline */
+.sparkline{margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)}
+.sparkline-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+.sparkline svg{width:100%;height:60px;overflow:visible}
+.sparkline-line{fill:none;stroke:url(#sparkGrad);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sparkline-area{opacity:0.08}
+.sparkline-dot{fill:#30D158;filter:drop-shadow(0 0 4px rgba(48,209,88,0.5))}
+.sparkline-label{font-size:9px;fill:rgba(255,255,255,0.25);font-weight:600}
+.sparkline-val{font-size:9px;fill:rgba(255,255,255,0.35);font-weight:700}
+
+/* Stats dashboard */
+.stats{padding:16px 20px;border-radius:16px;background:rgba(255,255,255,0.04);margin-bottom:12px;animation:fadeIn 0.4s 0.2s both ease}
+.stats-title{font-size:11px;font-weight:700;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-item{padding:12px;border-radius:12px;background:rgba(255,255,255,0.04)}
+.stat-num{font-size:22px;font-weight:800;line-height:1}
+.stat-num.orange{color:#FF9500}
+.stat-num.green{color:#30D158}
+.stat-num.blue{color:#5AC8FA}
+.stat-num.pink{color:#FF2D55}
+.stat-lbl{font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;letter-spacing:0.5px}
+
+/* Journal timeline */
+.timeline{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,0.04);margin-top:12px;animation:fadeIn 0.4s ease}
+.timeline-title{font-size:11px;font-weight:700;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.timeline-entry{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.timeline-entry:last-child{border-bottom:none}
+.timeline-day{font-size:11px;font-weight:800;color:#FF9500;white-space:nowrap;padding-top:2px;min-width:44px}
+.timeline-text{font-size:13px;color:rgba(255,255,255,0.35);font-style:italic;line-height:1.5;flex:1}
+.timeline-empty{font-size:12px;color:rgba(255,255,255,0.12);text-align:center;padding:8px 0}
+
+/* Share card button */
+.share-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,149,0,0.2);background:rgba(255,149,0,0.06);color:#FF9500;font-size:13px;font-weight:700;cursor:pointer;margin-top:12px;transition:all 0.2s;font-family:inherit}
+.share-btn:active{transform:scale(0.97);background:rgba(255,149,0,0.12)}
+.share-canvas-wrap{position:fixed;top:-9999px;left:-9999px;pointer-events:none}
+
+/* Weekly recap */
+.recap{padding:16px 20px;border-radius:16px;background:linear-gradient(135deg,rgba(255,149,0,0.08),rgba(255,45,85,0.06));border:1px solid rgba(255,149,0,0.1);margin-bottom:16px;animation:fadeIn 0.6s ease}
+.recap-title{font-size:13px;font-weight:800;color:#FF9500;margin-bottom:10px}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.recap-stat{text-align:center}
+.recap-stat-num{font-size:20px;font-weight:800}
+.recap-stat-lbl{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-top:1px}
+.recap-journal{font-size:12px;color:rgba(255,255,255,0.3);font-style:italic;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px;line-height:1.5}
+</style>
 </head>
 <body>
-    <div id="app"></div>
+<div id="app"></div>
+<script>
+// ═══════════════════════════════════════
+// QUOTES (75 unique)
+// ═══════════════════════════════════════
+const Q=[
+{t:"Discipline is choosing between what you want now and what you want most.",a:"Abraham Lincoln"},
+{t:"We do not rise to the level of our goals. We fall to the level of our systems.",a:"James Clear"},
+{t:"You will never always be motivated. You have to learn to be disciplined.",a:"Unknown"},
+{t:"It's supposed to be hard. If it were easy, everyone would do it.",a:"Tom Hanks"},
+{t:"Don't count the days, make the days count.",a:"Muhammad Ali"},
+{t:"Your body can stand almost anything. It's your mind you have to convince.",a:"Unknown"},
+{t:"Suffer the pain of discipline or suffer the pain of regret.",a:"Jim Rohn"},
+{t:"If you're tired of starting over, stop giving up.",a:"Unknown"},
+{t:"No one is coming to save you. This life is 100% your responsibility.",a:"Unknown"},
+{t:"Your future self is watching you right now through memories.",a:"Unknown"},
+{t:"It always seems impossible until it's done.",a:"Nelson Mandela"},
+{t:"Discipline equals freedom.",a:"Jocko Willink"},
+{t:"You didn't come this far to only come this far.",a:"Unknown"},
+{t:"Nobody cares. Work harder.",a:"Unknown"},
+{t:"Day by day, what you do is who you become.",a:"Heraclitus"},
+{t:"The body does not want you to do this. You cannot listen to it.",a:"David Goggins"},
+{t:"Don't stop when you're tired. Stop when you're done.",a:"David Goggins"},
+{t:"Lock in.",a:"Unknown"},
+{t:"75 days. No shortcuts. No excuses. Just results.",a:"Unknown"},
+{t:"The pain you feel today will be the strength you feel tomorrow.",a:"Unknown"},
+{t:"Obsessed is a word the lazy use to describe the dedicated.",a:"Unknown"},
+{t:"Comfort is the enemy of achievement.",a:"Farrah Gray"},
+{t:"Make yourself proud.",a:"Unknown"},
+{t:"You are one decision away from a completely different life.",a:"Unknown"},
+{t:"Eat clean. Walk far. Train hard. Repeat.",a:"Unknown"},
+{t:"The only bad workout is the one that didn't happen.",a:"Unknown"},
+{t:"Motivation gets you started. Habit keeps you going.",a:"Jim Ryun"},
+{t:"Fall seven times, stand up eight.",a:"Japanese Proverb"},
+{t:"The hard days are the best because that's when champions are made.",a:"Gabby Douglas"},
+{t:"Be stronger than your strongest excuse.",a:"Unknown"},
+{t:"The grind includes the days you hate. Those are the most important ones.",a:"Unknown"},
+{t:"Success is the sum of small efforts repeated day in and day out.",a:"Robert Collier"},
+{t:"What hurts today makes you stronger tomorrow.",a:"Jay Cutler"},
+{t:"A year from now you'll wish you had started today.",a:"Karen Lamb"},
+{t:"The secret of getting ahead is getting started.",a:"Mark Twain"},
+{t:"Do something today that your future self will thank you for.",a:"Sean Patrick Flanery"},
+{t:"Every champion was once a contender that refused to give up.",a:"Rocky Balboa"},
+{t:"Wake up with determination. Go to bed with satisfaction.",a:"Unknown"},
+{t:"The best project you'll ever work on is you.",a:"Unknown"},
+{t:"Nothing will work unless you do.",a:"Maya Angelou"},
+{t:"Small daily improvements over time lead to stunning results.",a:"Robin Sharma"},
+{t:"Push yourself because no one else is going to do it for you.",a:"Unknown"},
+{t:"The wall is there for people who don't want it badly enough.",a:"Randy Pausch"},
+{t:"Don't wish for it. Work for it.",a:"Unknown"},
+{t:"Go the extra mile. It's never crowded.",a:"Unknown"},
+{t:"What seems impossible today will become your warm-up tomorrow.",a:"Unknown"},
+{t:"The comeback is always stronger than the setback.",a:"Unknown"},
+{t:"Prove them wrong. Prove yourself right.",a:"Unknown"},
+{t:"Your only limit is you.",a:"Unknown"},
+{t:"Action is the foundational key to all success.",a:"Pablo Picasso"},
+{t:"The greatest wealth is health.",a:"Virgil"},
+{t:"Results happen over time, not overnight. Stay consistent and be patient.",a:"Unknown"},
+{t:"Health is not about the weight you lose, but the life you gain.",a:"Unknown"},
+{t:"Champions keep playing until they get it right.",a:"Billie Jean King"},
+{t:"Stop wishing. Start doing.",a:"Unknown"},
+{t:"You already know what to do. Now do it.",a:"Unknown"},
+{t:"The mind is the limit. As long as the mind can envision it, you can achieve it.",a:"Arnold Schwarzenegger"},
+{t:"Being defeated is often a temporary condition. Giving up is what makes it permanent.",a:"Marilyn vos Savant"},
+{t:"If it doesn't challenge you, it doesn't change you.",a:"Fred DeVito"},
+{t:"You can't cheat the grind. It knows how much you've invested.",a:"Unknown"},
+{t:"When you feel like quitting, think about why you started.",a:"Unknown"},
+{t:"Respect your body enough to fuel it right, move it daily, and rest when needed.",a:"Unknown"},
+{t:"Strength does not come from the body. It comes from the will.",a:"Unknown"},
+{t:"The harder you work for something, the greater you'll feel when you achieve it.",a:"Unknown"},
+{t:"Today's actions are tomorrow's results.",a:"Unknown"},
+{t:"What you eat in private, you wear in public.",a:"Unknown"},
+{t:"Pain is temporary. Quitting lasts forever.",a:"Lance Armstrong"},
+{t:"The only way to finish is to start.",a:"Unknown"},
+{t:"Don't limit your challenges. Challenge your limits.",a:"Unknown"},
+{t:"Sweat now, shine later.",a:"Unknown"},
+{t:"Every step forward is a step away from where you used to be.",a:"Unknown"},
+{t:"Hard choices, easy life. Easy choices, hard life.",a:"Jerzy Gregorek"},
+{t:"It does not matter how slowly you go as long as you do not stop.",a:"Confucius"},
+{t:"The finish line is just the beginning of a whole new race.",a:"Unknown"},
+{t:"You made it. 75 days. You are transformed.",a:"Unknown"},
+];
 
-    <script>
-        // ─── CONSTANTS ─── //
-        const QUOTES = [
-            { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
-            { text: "We do not rise to the level of our goals. We fall to the level of our systems.", author: "James Clear" },
-            { text: "You will never always be motivated. You have to learn to be disciplined.", author: "Unknown" },
-            { text: "It's supposed to be hard. If it were easy, everyone would do it.", author: "Tom Hanks" },
-            { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
-            { text: "Your body can stand almost anything. It's your mind you have to convince.", author: "Unknown" },
-            { text: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
-            { text: "If you're tired of starting over, stop giving up.", author: "Unknown" },
-            { text: "No one is coming to save you. This life is 100% your responsibility.", author: "Unknown" },
-            { text: "Your future self is watching you right now through memories.", author: "Unknown" },
-            { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
-            { text: "Discipline equals freedom.", author: "Jocko Willink" },
-            { text: "You didn't come this far to only come this far.", author: "Unknown" },
-            { text: "Nobody cares. Work harder.", author: "Unknown" },
-            { text: "Day by day, what you do is who you become.", author: "Heraclitus" },
-            { text: "The body does not want you to do this. You cannot listen to it.", author: "David Goggins" },
-            { text: "Don't stop when you're tired. Stop when you're done.", author: "David Goggins" },
-            { text: "Lock in.", author: "Unknown" },
-            { text: "75 days. No shortcuts. No excuses. Just results.", author: "Unknown" },
-            { text: "The pain you feel today will be the strength you feel tomorrow.", author: "Unknown" },
-            { text: "Obsessed is a word the lazy use to describe the dedicated.", author: "Unknown" },
-            { text: "Comfort is the enemy of achievement.", author: "Farrah Gray" },
-            { text: "Make yourself proud.", author: "Unknown" },
-            { text: "You are one decision away from a completely different life.", author: "Unknown" },
-            { text: "Eat clean. Walk far. Train hard. Repeat.", author: "Unknown" },
-        ];
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+const TODAY=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const YESTERDAY=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const daysBetween=(a,b)=>{const x=new Date(a+'T00:00:00'),y=new Date(b+'T00:00:00');return Math.floor((y-x)/86400000)};
+const isDayComplete=d=>d&&d.diet&&(d.steps==='10k'||d.steps==='5k')&&d.workout&&d.protein;
+const haptic=()=>{try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}};
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const safeName=()=>esc(profile&&profile.name?profile.name:'Warrior');
+const formatDate=ds=>{const d=new Date(ds+'T00:00:00');const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return `${months[d.getMonth()]} ${d.getDate()}`};
+const dateForDayNum=n=>{const d=new Date(state.startDate+'T00:00:00');d.setDate(d.getDate()+(n-1));return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 
-        // ─── HELPERS ─── //
-        const getToday = () => {
-            const d = new Date();
-            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-        };
+// Milestones: special moments at key days
+const MILESTONES={
+  7:{emoji:'🔥',title:'1 Week Down',sub:'Most people quit by now. Not you.'},
+  14:{emoji:'⚡',title:'2 Weeks Strong',sub:'The habit is forming. Feel it.'},
+  21:{emoji:'🧠',title:'3 Weeks — Habit Locked',sub:'Science says 21 days builds a habit. You did it.'},
+  30:{emoji:'💎',title:'30 Days — Diamond Mind',sub:'You\'re in the top 1% of discipline.'},
+  50:{emoji:'👑',title:'50 Days — Royalty',sub:'Two-thirds done. You\'re unstoppable now.'},
+  60:{emoji:'🏔️',title:'60 Days — Summit in Sight',sub:'15 days left. The finish line is real.'},
+  75:{emoji:'🏆',title:'75 Days — LEGENDARY',sub:'You are transformed. Forever.'},
+};
 
-        const defaultState = () => ({
-            startDate: getToday(),
-            currentDay: 1,
-            resets: 0,
-            days: {},
-            completed: false,
-            currentWeight: null,
-        });
+// Countdown to midnight
+function getCountdown(){
+  const now=new Date();
+  const midnight=new Date(now);
+  midnight.setHours(24,0,0,0);
+  const diff=Math.max(0,midnight-now);
+  const h=Math.floor(diff/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  return{h,m,s,total:diff};
+}
 
-        // ─── STATE MANAGEMENT ─── //
-        let state = loadState();
-        let showConfetti = false;
-        let showReset = false;
+function formatCountdown(){
+  const c=getCountdown();
+  return `${String(c.h).padStart(2,'0')}h ${String(c.m).padStart(2,'0')}m ${String(c.s).padStart(2,'0')}s`;
+}
 
-        function loadState() {
-            const saved = localStorage.getItem("75day_challenge");
-            return saved ? JSON.parse(saved) : defaultState();
-        }
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const STORAGE='75day_challenge';
+const PROFILE_KEY='75day_profile';
+let state, profile, editingWeight=false, showConfetti=false, showReset=false, showProfile=false, scrollY=0, confettiTimeout=null;
+let viewingDate=null; // null = today, or a date string like "2026-03-08"
 
-        function saveState() {
-            localStorage.setItem("75day_challenge", JSON.stringify(state));
-            render();
-        }
+function load(){try{const s=localStorage.getItem(STORAGE);if(!s)return null;const d=JSON.parse(s);if(!d.startDate||typeof d.currentDay!=='number')return null;if(!/^\d{4}-\d{2}-\d{2}$/.test(d.startDate))return null;d.resets=Math.max(0,d.resets||0);if(!d.days||typeof d.days!=='object')d.days={};if(!d.journal||typeof d.journal!=='object')d.journal={};if(!Array.isArray(d.weightHistory))d.weightHistory=[];return d}catch(e){localStorage.removeItem(STORAGE);return null}}
+function loadProfile(){try{const p=localStorage.getItem(PROFILE_KEY);if(!p)return null;const d=JSON.parse(p);if(!d.name||typeof d.name!=='string')return null;return d}catch(e){localStorage.removeItem(PROFILE_KEY);return null}}
+function defaultState(){return{startDate:TODAY(),currentDay:1,resets:0,days:{},completed:false,currentWeight:null,journal:{},weightHistory:[]}}
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state))}catch(e){if(e.name==='QuotaExceededError')alert('Storage full! Your changes may not be saved. Clear some browser data.')}}
+function saveProfile(){try{localStorage.setItem(PROFILE_KEY,JSON.stringify(profile))}catch(e){}}
 
-        function update(key, val) {
-            const today = getToday();
-            const todayData = state.days[today] || { diet: false, steps: "none", workout: false, protein: false };
-            const updated = { ...todayData, [key]: val };
-            const wasAllDone = todayData.diet && (todayData.steps === "10k" || todayData.steps === "5k") && todayData.workout && todayData.protein;
-            const nowAllDone = updated.diet && (updated.steps === "10k" || updated.steps === "5k") && updated.workout && updated.protein;
+// ═══════════════════════════════════════
+// CORE LOGIC
+// ═══════════════════════════════════════
+function initState(){
+  state=load()||defaultState();
+  profile=loadProfile();
+  const today=TODAY();
+  if(state.completed)return;
+  const expected=daysBetween(state.startDate,today)+1;
+  if(expected===state.currentDay)return;
+  if(expected>state.currentDay){
+    for(let d=state.currentDay;d<expected;d++){
+      const ds=dateForDayNum(d);
+      if(!isDayComplete(state.days[ds])){showReset=true;return}
+    }
+    state.currentDay=expected;
+    save();
+  }
+}
 
-            state.days[today] = updated;
+// ═══════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════
+function getActiveDate(){return viewingDate||TODAY()}
+function isEditable(dateStr){return dateStr===TODAY()||dateStr===YESTERDAY()}
 
-            if (nowAllDone && !wasAllDone) {
-                showConfetti = true;
-                setTimeout(() => { showConfetti = false; render(); }, 3000);
-            }
+function update(key,val){
+  if(!audioCtx)getAudioCtx(); // Prime audio on first user gesture (iOS)
+  const activeDate=getActiveDate();
+  if(!isEditable(activeDate))return; // read-only
+  const td=state.days[activeDate]||{diet:false,steps:'none',workout:false,protein:false};
+  const wasDone=isDayComplete(td);
+  td[key]=val;
+  state.days[activeDate]=td;
+  const nowDone=isDayComplete(td);
+  if(nowDone&&!wasDone&&activeDate===TODAY()){
+    showConfetti=true;haptic();playCelebration();
+    if(confettiTimeout)clearTimeout(confettiTimeout);
+    confettiTimeout=setTimeout(()=>{showConfetti=false;confettiTimeout=null;render()},4200);
+    if(state.currentDay>=75)state.completed=true;
+  }else{playTick()}
+  haptic();save();render();
+}
 
-            if (nowAllDone && state.currentDay >= 75) {
-                state.completed = true;
-            }
+function toggleStep(val){update('steps',val)}
 
-            saveState();
-        }
+function resetChallenge(){
+  const resets=state.resets+1;
+  const cw=state.currentWeight;
+  state=defaultState();
+  state.resets=resets;
+  state.currentWeight=cw;
+  showReset=false;
+  viewingDate=null;
+  editingWeight=false;
+  editingJournal=false;
+  stopCountdown();
+  save();render();
+}
 
-        function resetChallenge() {
-            state = { ...defaultState(), resets: state.resets + 1, currentWeight: state.currentWeight };
-            showReset = false;
-            saveState();
-        }
+function restartAfterComplete(){
+  const cw=state.currentWeight;
+  state=defaultState();
+  state.currentWeight=cw;
+  viewingDate=null;
+  editingWeight=false;
+  editingJournal=false;
+  stopCountdown();
+  save();render();
+}
 
-        function setWeight(w) {
-            state.currentWeight = w;
-            saveState();
-        }
+function saveWeight(){
+  const el=document.getElementById('wInput');
+  if(!el)return;
+  const w=parseFloat(el.value);
+  if(!w||w<=0||w>=500){
+    el.style.borderColor='#FF2D55';
+    el.placeholder='Enter valid weight (0.1–499.9)';
+    el.value='';
+    return;
+  }
+  state.currentWeight=w;
+  recordWeight(w);
+  save();
+  editingWeight=false;render();
+}
 
-        // ─── RENDER FUNCTIONS ─── //
-        function createActivityRing(day, allDone, tasksCompleted) {
-            const total = 75;
-            const pct = ((day - 1) / total) * 100;
-            const cx = 100, cy = 100, r = 80, stroke = 14;
-            const circ = 2 * Math.PI * r;
-            const offset = circ - (pct / 100) * circ;
+function recordWeight(w){
+  if(!state.weightHistory)state.weightHistory=[];
+  const today=TODAY();
+  const last=state.weightHistory[state.weightHistory.length-1];
+  if(last&&last.date===today){last.weight=w}
+  else{state.weightHistory.push({date:today,weight:w})}
+}
 
-            const taskPct = (tasksCompleted / 4) * 100;
-            const r2 = 62, circ2 = 2 * Math.PI * r2, offset2 = circ2 - (taskPct / 100) * circ2;
+function startWeightEdit(){showProfile=false;editingWeight=true;render();setTimeout(()=>{const el=document.getElementById('wInput');if(el)el.focus()},50)}
 
-            return `
-                <div class="activity-ring-wrapper">
-                    <svg class="activity-ring-svg" width="200" height="200" viewBox="0 0 200 200">
-                        <defs>
-                            <linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#FF2D55" />
-                                <stop offset="100%" stop-color="#FF9500" />
-                            </linearGradient>
-                            <linearGradient id="rg2" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#30D158" />
-                                <stop offset="100%" stop-color="#63E6BE" />
-                            </linearGradient>
-                            <filter id="rGlow">
-                                <feGaussianBlur stdDeviation="3" result="b" />
-                                <feMerge>
-                                    <feMergeNode in="b" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        <!-- outer track -->
-                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,45,85,0.15)" stroke-width="${stroke}" />
-                        <!-- outer progress -->
-                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#rg1)" stroke-width="${stroke}"
-                            stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"
-                            filter="url(#rGlow)" style="transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)" />
-                        <!-- inner track -->
-                        <circle cx="${cx}" cy="${cy}" r="${r2}" fill="none" stroke="rgba(48,209,88,0.12)" stroke-width="${stroke}" />
-                        <!-- inner progress -->
-                        <circle cx="${cx}" cy="${cy}" r="${r2}" fill="none" stroke="url(#rg2)" stroke-width="${stroke}"
-                            stroke-dasharray="${circ2}" stroke-dashoffset="${offset2}" stroke-linecap="round"
-                            style="transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1)" />
-                    </svg>
-                    <div class="activity-ring-center">
-                        <div class="ring-day">${day}</div>
-                        <div class="ring-label">of 75</div>
-                    </div>
-                </div>
-            `;
-        }
+function calcTotalSteps(){
+  return Object.values(state.days).reduce((s,d)=>s+(d.steps==='10k'?10000:d.steps==='5k'?5000:0),0);
+}
 
-        function createTaskRow(icon, label, done, onTap, color = "#30D158") {
-            const isDone = done ? "done" : "";
-            const isBlue = color === "#5AC8FA" ? "blue" : "";
-            return `
-                <div class="task-row" onclick="${onTap}">
-                    <div class="task-icon ${isDone} ${isBlue}">${icon}</div>
-                    <div class="task-label ${isDone}">${label}</div>
-                    <div class="task-checkbox ${isDone} ${isBlue}">
-                        ${done ? '<svg class="checkmark-svg" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" /></svg>' : ''}
-                    </div>
-                </div>
-            `;
-        }
+// Navigate to a specific day via heatmap
+function viewDay(dayNum){
+  const ds=dateForDayNum(dayNum);
+  const today=TODAY();
+  editingJournal=false;
+  if(ds===today){viewingDate=null}
+  else{viewingDate=ds}
+  render();
+}
 
-        function createStepRow(value) {
-            const is10k = value === "10k";
-            const is5k = value === "5k";
-            const isDone = is10k || is5k;
-            const color = is10k ? "#30D158" : is5k ? "#FFD60A" : "rgba(255,255,255,0.08)";
-            const iconBg = isDone ? color : "rgba(255,255,255,0.08)";
+function backToToday(){viewingDate=null;editingJournal=false;render()}
 
-            return `
-                <div class="step-row">
-                    <div class="step-header">
-                        <div class="step-icon" style="background: ${iconBg}">🚶</div>
-                        <div class="step-content">
-                            <div class="step-label ${isDone ? 'done' : ''}">Steps</div>
-                        </div>
-                        ${isDone ? `<span class="step-badge" style="color: ${color}">${is10k ? '10K' : '5K'}</span>` : ''}
-                    </div>
-                    <div class="step-buttons">
-                        <button class="step-button ${is10k ? 'active-green' : ''}" onclick="update('steps', '${is10k ? 'none' : '10k'}')">10,000+</button>
-                        <button class="step-button ${is5k ? 'active-yellow' : ''}" onclick="update('steps', '${is5k ? 'none' : '5k'}')">5,000+</button>
-                    </div>
-                </div>
-            `;
-        }
+// ═══════════════════════════════════════
+// JOURNAL
+// ═══════════════════════════════════════
+let editingJournal=false;
+let savingJournal=false;
 
-        function createWeightSection() {
-            const w = state.currentWeight;
+function saveJournal(){
+  if(savingJournal)return;
+  const el=document.getElementById('journalInput');
+  if(!el)return;
+  savingJournal=true;
+  const text=el.value.trim().slice(0,200);
+  if(!state.journal)state.journal={};
+  const activeDate=getActiveDate();
+  if(text){state.journal[activeDate]=text}
+  else{delete state.journal[activeDate]}
+  save();
+  editingJournal=false;
+  render();
+  savingJournal=false;
+}
 
-            if (!w) {
-                return `
-                    <div class="weight-setup" onclick="startWeightEdit()">
-                        <div class="weight-setup-text">Tap to set your weight</div>
-                        <div class="weight-setup-subtext">Unlock the 1kg burn tracker</div>
-                    </div>
-                `;
-            }
+function startJournalEdit(){editingJournal=true;render();setTimeout(()=>{const el=document.getElementById('journalInput');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}},50)}
 
-            const target = Math.floor(w) === w ? w - 1 : Math.floor(w);
-            const kgToLose = w - target;
-            const totalSteps = Object.values(state.days).reduce((s, d) => s + (d.steps === "10k" ? 10000 : d.steps === "5k" ? 5000 : 0), 0);
-            const calPerStep = w * 0.000563;
-            const stepsNeeded = Math.round((kgToLose * 7700) / calPerStep);
-            const progress = Math.min(totalSteps / stepsNeeded, 1);
-            const remaining = Math.max(stepsNeeded - totalSteps, 0);
-            const daysLeft = Math.ceil(remaining / 10000);
-            const progressGradient = progress < 0.5 ? "linear-gradient(90deg, #FF9500, #FF2D55)" : "linear-gradient(90deg, #30D158, #63E6BE)";
+// ═══════════════════════════════════════
+// COUNTDOWN TIMER
+// ═══════════════════════════════════════
+let countdownInterval=null;
 
-            return `
-                <div class="weight-section">
-                    <div class="weight-header">
-                        <div>
-                            <div class="weight-label">Weight</div>
-                            <div class="weight-value" onclick="startWeightEdit()">
-                                ${w}<span class="weight-value-unit"> kg</span>
-                            </div>
-                        </div>
-                        <div class="weight-goal">
-                            <div class="weight-label">Goal</div>
-                            <div class="weight-goal-value">${target.toFixed(1)}</div>
-                        </div>
-                    </div>
-                    <div class="burn-progress">
-                        <div class="burn-header">
-                            <span class="burn-label">Steps to ${target.toFixed(1)} kg</span>
-                            <span class="burn-percentage">${Math.round(progress * 100)}%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${progress * 100}%; background: ${progressGradient}"></div>
-                        </div>
-                        <div class="burn-stats">
-                            <div class="burn-stat">
-                                <div class="burn-stat-value">${remaining.toLocaleString()}</div>
-                                <div class="burn-stat-label">steps left</div>
-                            </div>
-                            <div class="burn-stat burn-stat-right">
-                                <div class="burn-stat-value burn-stat-value-orange">~${daysLeft}d</div>
-                                <div class="burn-stat-label">at 10k/day</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+function stopCountdown(){if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null}}
 
-        function createHeatmap() {
-            const today = getToday();
-            let squares = '';
+function startCountdown(){
+  stopCountdown();
+  countdownInterval=setInterval(()=>{
+    const el=document.getElementById('countdownTime');
+    if(!el){stopCountdown();return}
+    const c=getCountdown();
+    el.textContent=formatCountdown();
+    el.className='countdown-time';
+    if(c.h<2)el.classList.add('red');
+    else if(c.h<6)el.classList.add('orange');
+    else el.classList.add('green');
+  },1000);
+}
 
-            for (let i = 0; i < 75; i++) {
-                const dayDate = new Date(state.startDate + "T00:00:00");
-                dayDate.setDate(dayDate.getDate() + i);
-                const ds = `${dayDate.getFullYear()}-${String(dayDate.getMonth() + 1).padStart(2, "0")}-${String(dayDate.getDate()).padStart(2, "0")}`;
-                const isCurrent = i + 1 === state.currentDay && ds === today;
-                const isPast = i + 1 < state.currentDay;
-                const dd = state.days[ds];
-                const passed = dd && dd.diet && (dd.steps === "10k" || dd.steps === "5k") && dd.workout && dd.protein;
+// Pause/resume countdown on visibility change
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)stopCountdown();
+  else{const ad=getActiveDate();const td=state.days[ad]||{};const done=td.diet&&(td.steps==='10k'||td.steps==='5k')&&td.workout&&td.protein;if(ad===TODAY()&&!done&&!state.completed)startCountdown()}
+});
 
-                let className = "heatmap-square";
-                if (isCurrent) className += " current";
-                else if (isPast && passed) className += " completed";
-                else if (isPast) className += " missed";
+// ═══════════════════════════════════════
+// STATS + SPARKLINE HELPERS
+// ═══════════════════════════════════════
+function getStats(){
+  const days=state.days||{};
+  const entries=Object.entries(days);
+  let totalSteps=0, completedDays=0, totalDays=entries.length;
+  entries.forEach(([ds,d])=>{
+    if(d.steps==='10k')totalSteps+=10000;
+    else if(d.steps==='5k')totalSteps+=5000;
+    if(isDayComplete(d))completedDays++;
+  });
+  const completionPct=totalDays>0?Math.round((completedDays/totalDays)*100):0;
+  const daysLeft=Math.max(75-state.currentDay,0);
+  const journalCount=Object.keys(state.journal||{}).length;
+  return{totalSteps,completedDays,totalDays,completionPct,daysLeft,journalCount};
+}
 
-                squares += `<div class="${className}"></div>`;
-            }
+function getWeightHistory(){
+  if(!state.weightHistory)state.weightHistory=[];
+  return state.weightHistory;
+}
 
-            return `
-                <div class="heatmap-section">
-                    <div class="heatmap-title">Journey</div>
-                    <div class="heatmap-grid">${squares}</div>
-                </div>
-            `;
-        }
+function buildSparklineSVG(history){
+  if(!history||history.length<2)return '';
+  const W=280,H=50,PAD=10;
+  const weights=history.map(h=>h.weight);
+  const minW=Math.min(...weights)-0.5;
+  const maxW=Math.max(...weights)+0.5;
+  const range=maxW-minW||1;
+  const pts=history.map((h,i)=>{
+    const x=PAD+(i/(history.length-1))*(W-PAD*2);
+    const y=PAD+((maxW-h.weight)/range)*(H-PAD*2);
+    return{x,y,w:h.weight,d:h.date};
+  });
+  const line=pts.map((p,i)=>(i===0?'M':'L')+`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const area=line+` L${pts[pts.length-1].x.toFixed(1)},${H} L${pts[0].x.toFixed(1)},${H} Z`;
+  const last=pts[pts.length-1];
+  const first=pts[0];
+  const trend=last.w-first.w;
+  const trendColor=trend<=0?'#30D158':'#FF2D55';
+  const trendText=trend<=0?`${Math.abs(trend).toFixed(1)} kg lost`:`${trend.toFixed(1)} kg gained`;
 
-        function render() {
-            const app = document.getElementById("app");
-            const today = getToday();
-            const td = state.days[today] || { diet: false, steps: "none", workout: false, protein: false };
-            const stepsOk = td.steps === "10k" || td.steps === "5k";
-            const allDone = td.diet && stepsOk && td.workout && td.protein;
-            const tasksCompleted = [td.diet, stepsOk, td.workout, td.protein].filter(Boolean).length;
-            const qi = (state.currentDay - 1) % QUOTES.length;
+  return `<div class="sparkline">
+    <div class="sparkline-title">Weight Trend ${history.length>1?'· '+trendText:''}</div>
+    <svg viewBox="0 0 ${W} ${H+8}" preserveAspectRatio="none">
+      <defs><linearGradient id="sparkGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="${trendColor}"/><stop offset="100%" stop-color="#FF9500"/></linearGradient></defs>
+      <path d="${area}" fill="${trendColor}" class="sparkline-area"/>
+      <path d="${line}" class="sparkline-line" style="stroke:url(#sparkGrad)"/>
+      <circle cx="${last.x}" cy="${last.y}" r="3" class="sparkline-dot" style="fill:${trendColor}"/>
+      <text x="${first.x}" y="${H+7}" class="sparkline-label">${first.w.toFixed(1)}</text>
+      <text x="${last.x}" y="${H+7}" text-anchor="end" class="sparkline-val" style="fill:${trendColor}">${last.w.toFixed(1)}</text>
+    </svg>
+  </div>`;
+}
 
-            if (state.completed) {
-                app.innerHTML = `
-                    <div class="completion-screen">
-                        ${showConfetti ? '<div class="confetti-container" id="confetti"></div>' : ''}
-                        <div class="completion-emoji">🏆</div>
-                        <div class="completion-label">Challenge Complete</div>
-                        <div class="completion-title">75 Days of<br>Discipline</div>
-                        <div class="completion-subtitle">You're not the same person<br>who started this.</div>
-                    </div>
-                `;
-                if (showConfetti) createConfetti();
-                return;
-            }
+function buildJournalTimeline(){
+  if(!state.journal)return '';
+  const entries=Object.entries(state.journal).sort((a,b)=>b[0].localeCompare(a[0])); // newest first
+  if(entries.length===0)return '';
+  const items=entries.slice(0,15).map(([ds,text])=>{
+    const dayNum=daysBetween(state.startDate,ds)+1;
+    return `<div class="timeline-entry">
+      <div class="timeline-day">Day ${dayNum}</div>
+      <div class="timeline-text">"${esc(text)}"</div>
+    </div>`;
+  }).join('');
 
-            const streakLabel = state.currentDay < 10 ? "Building momentum" : state.currentDay < 30 ? "Getting dangerous" : state.currentDay < 60 ? "Unstoppable" : "Legendary";
-            const resetBadge = state.resets > 0 ? `<div class="reset-badge">${state.resets}x reset</div>` : '';
-            const streakPill = state.currentDay > 1 ? `
-                <div class="streak-pill">
-                    <div class="streak-badge">
-                        <span class="streak-emoji">🔥</span>
-                        <span class="streak-text">${state.currentDay - 1} day streak</span>
-                        <span class="streak-label">${streakLabel}</span>
-                    </div>
-                </div>
-            ` : '';
-            const allDoneBanner = allDone ? `
-                <div class="all-done">
-                    <div class="all-done-emoji">✅</div>
-                    <div class="all-done-text">Day ${state.currentDay} Complete</div>
-                    <div class="all-done-subtext">See you tomorrow.</div>
-                </div>
-            ` : '';
-            const resetModal = showReset ? `
-                <div class="modal-overlay">
-                    <div class="modal-content">
-                        <div class="modal-emoji">💀</div>
-                        <div class="modal-title">RESET</div>
-                        <div class="modal-text">You missed a day.<br>Back to Day 1.</div>
-                        <button class="modal-button" onclick="resetChallenge()">Restart Challenge</button>
-                    </div>
-                </div>
-            ` : '';
+  return `<div class="timeline">
+    <div class="timeline-title">Your Journal</div>
+    ${items}
+  </div>`;
+}
 
-            app.innerHTML = `
-                ${resetModal}
-                ${showConfetti ? '<div class="confetti-container" id="confetti"></div>' : ''}
-                <div class="container">
-                    <div class="inner">
-                        <div class="header">
-                            <div>
-                                <div class="header-title">75 Day</div>
-                                <div class="header-title orange">Challenge</div>
-                            </div>
-                            ${resetBadge}
-                        </div>
-                        ${createActivityRing(state.currentDay, allDone, tasksCompleted)}
-                        ${streakPill}
-                        <div class="quote-section">
-                            <p class="quote-text">"${QUOTES[qi].text}"</p>
-                            <p class="quote-author">${QUOTES[qi].author}</p>
-                        </div>
-                        ${createWeightSection()}
-                        <div class="tasks-card">
-                            <div class="tasks-header">
-                                <div class="tasks-title">Today's Mission</div>
-                            </div>
-                            ${createTaskRow("🥗", "Clean Diet", td.diet, "update('diet', " + !td.diet + ")")}
-                            ${createStepRow(td.steps)}
-                            ${createTaskRow("🏋️", "Gym Session", td.workout, "update('workout', " + !td.workout + ")")}
-                            ${createTaskRow("🫘", "100g Protein", td.protein, "update('protein', " + !td.protein + ")", "#5AC8FA")}
-                        </div>
-                        ${allDoneBanner}
-                        ${createHeatmap()}
-                        <div class="footer">
-                            ${state.resets === 0 ? "First attempt. Make it count." : `Attempt ${state.resets + 1}. This time is different.`}
-                        </div>
-                    </div>
-                </div>
-            `;
+// ═══════════════════════════════════════
+// SOUND EFFECTS (Web Audio API)
+// ═══════════════════════════════════════
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)try{audioCtx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}return audioCtx}
 
-            if (showConfetti) createConfetti();
-        }
+function playTick(){
+  const ctx=getAudioCtx();if(!ctx)return;
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.connect(g);g.connect(ctx.destination);
+  o.frequency.setValueAtTime(1200,ctx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(800,ctx.currentTime+0.06);
+  g.gain.setValueAtTime(0.08,ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);
+  o.start(ctx.currentTime);o.stop(ctx.currentTime+0.08);
+}
 
-        function startWeightEdit() {
-            const w = state.currentWeight || "";
-            const input = prompt("Enter your weight (kg):", w);
-            if (input !== null) {
-                const parsed = parseFloat(input);
-                if (parsed > 0 && parsed < 500) {
-                    setWeight(parsed);
-                }
-            }
-        }
+function playCelebration(){
+  const ctx=getAudioCtx();if(!ctx)return;
+  const notes=[523,659,784,1047]; // C5, E5, G5, C6
+  notes.forEach((freq,i)=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(freq,ctx.currentTime+i*0.12);
+    g.gain.setValueAtTime(0.06,ctx.currentTime+i*0.12);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.3);
+    o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+i*0.12+0.3);
+  });
+}
 
-        function createConfetti() {
-            const container = document.getElementById("confetti");
-            if (!container) return;
+// ═══════════════════════════════════════
+// SHARE CARD (Canvas-based)
+// ═══════════════════════════════════════
+function generateShareCard(){
+  const canvas=document.createElement('canvas');
+  const W=540,H=960;
+  canvas.width=W;canvas.height=H;
+  const c=canvas.getContext('2d');
 
-            const colors = ["#FF2D55", "#FF9500", "#30D158", "#5AC8FA", "#BF5AF2", "#FFD60A"];
+  c.textBaseline='alphabetic';
 
-            for (let i = 0; i < 50; i++) {
-                const piece = document.createElement("div");
-                piece.className = "confetti-piece";
-                const size = 5 + Math.random() * 7;
-                piece.style.left = Math.random() * 100 + "%";
-                piece.style.top = "-10px";
-                piece.style.width = size + "px";
-                piece.style.height = (size * 1.3) + "px";
-                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.borderRadius = "2px";
-                piece.style.animationDuration = (1.5 + Math.random() * 2) + "s";
-                piece.style.animationDelay = (Math.random() * 0.6) + "s";
-                container.appendChild(piece);
-            }
-        }
+  // Background gradient
+  const bg=c.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#1a1a1a');bg.addColorStop(1,'#000');
+  c.fillStyle=bg;c.fillRect(0,0,W,H);
 
-        // ─── INITIALIZATION ─── //
-        render();
+  // Orange accent strip
+  const accent=c.createLinearGradient(0,0,W,0);
+  accent.addColorStop(0,'#FF2D55');accent.addColorStop(1,'#FF9500');
+  c.fillStyle=accent;c.fillRect(0,0,W,4);
 
-        // ─── SERVICE WORKER ─── //
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("sw.js").catch(() => {});
-        }
-    </script>
+  // "75" big number
+  c.fillStyle='#FF9500';
+  c.font='900 120px system-ui, sans-serif';
+  c.textAlign='center';
+  c.fillText('75',W/2,180);
+
+  // "DAY CHALLENGE"
+  c.fillStyle='rgba(255,255,255,0.3)';
+  c.font='700 14px system-ui, sans-serif';
+  c.fillText('D A Y   C H A L L E N G E',W/2,210);
+
+  // Progress ring (simplified)
+  const cx=W/2,cy=340,r=80;
+  const pct=(state.currentDay-1)/75;
+  c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.strokeStyle='rgba(255,45,85,0.15)';c.lineWidth=12;c.stroke();
+  c.beginPath();c.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);c.strokeStyle='#FF9500';c.lineWidth=12;c.lineCap='round';c.stroke();
+
+  // Day number in ring
+  c.fillStyle='#fff';
+  c.font='800 48px system-ui, sans-serif';
+  c.fillText(`${state.currentDay}`,cx,cy+16);
+  c.fillStyle='rgba(255,255,255,0.4)';
+  c.font='600 13px system-ui, sans-serif';
+  c.fillText('of 75',cx,cy+38);
+
+  // Name
+  c.fillStyle='#fff';
+  c.font='700 22px system-ui, sans-serif';
+  c.fillText((profile&&profile.name)||'Warrior',cx,480);
+
+  // Stats boxes
+  const st=getStats();
+  const stats=[
+    {num:st.completedDays.toString(),lbl:'Days Crushed',color:'#30D158'},
+    {num:st.totalSteps.toLocaleString(),lbl:'Steps Walked',color:'#FF9500'},
+    {num:st.daysLeft.toString(),lbl:'Days Left',color:'#5AC8FA'},
+  ];
+
+  const boxW=150,boxH=80,gap=15,startX=(W-boxW*3-gap*2)/2;
+  stats.forEach((s,i)=>{
+    const x=startX+i*(boxW+gap),y=520;
+    c.fillStyle='rgba(255,255,255,0.04)';
+    c.beginPath();
+    // Rounded rect
+    const radius=12;
+    c.moveTo(x+radius,y);c.lineTo(x+boxW-radius,y);c.quadraticCurveTo(x+boxW,y,x+boxW,y+radius);
+    c.lineTo(x+boxW,y+boxH-radius);c.quadraticCurveTo(x+boxW,y+boxH,x+boxW-radius,y+boxH);
+    c.lineTo(x+radius,y+boxH);c.quadraticCurveTo(x,y+boxH,x,y+boxH-radius);
+    c.lineTo(x,y+radius);c.quadraticCurveTo(x,y,x+radius,y);
+    c.fill();
+
+    c.fillStyle=s.color;
+    c.font='800 24px system-ui, sans-serif';
+    c.fillText(s.num,x+boxW/2,y+38);
+    c.fillStyle='rgba(255,255,255,0.3)';
+    c.font='600 10px system-ui, sans-serif';
+    c.fillText(s.lbl,x+boxW/2,y+58);
+  });
+
+  // Streak
+  if(state.currentDay>1){
+    c.fillStyle='rgba(255,149,0,0.12)';
+    const streakW=180,streakH=36,sx=(W-streakW)/2,sy=640;
+    c.beginPath();
+    const sr=18;
+    c.moveTo(sx+sr,sy);c.lineTo(sx+streakW-sr,sy);c.quadraticCurveTo(sx+streakW,sy,sx+streakW,sy+sr);
+    c.lineTo(sx+streakW,sy+streakH-sr);c.quadraticCurveTo(sx+streakW,sy+streakH,sx+streakW-sr,sy+streakH);
+    c.lineTo(sx+sr,sy+streakH);c.quadraticCurveTo(sx,sy+streakH,sx,sy+streakH-sr);
+    c.lineTo(sx,sy+sr);c.quadraticCurveTo(sx,sy,sx+sr,sy);
+    c.fill();
+    c.fillStyle='#FF9500';
+    c.font='700 13px system-ui, sans-serif';
+    c.fillText(`🔥 ${state.currentDay-1} day streak`,W/2,sy+23);
+  }
+
+  // Quote
+  const qi=(state.currentDay-1)%Q.length;
+  c.fillStyle='rgba(255,255,255,0.25)';
+  c.font='italic 400 13px system-ui, sans-serif';
+  const quote=`"${Q[qi].t}"`;
+  // Word wrap
+  const maxW2=W-80;
+  const words=quote.split(' ');
+  let line='',lines=[],lineY=730;
+  words.forEach(w=>{
+    const test=line+w+' ';
+    if(c.measureText(test).width>maxW2&&line){lines.push(line.trim());line=w+' '}
+    else{line=test}
+  });
+  if(line)lines.push(line.trim());
+  lines.slice(0,3).forEach((l,i)=>{c.fillText(l,W/2,lineY+i*20)});
+
+  // Footer
+  c.fillStyle='rgba(255,255,255,0.08)';
+  c.font='700 11px system-ui, sans-serif';
+  c.fillText('75 DAY CHALLENGE',W/2,H-40);
+
+  // Convert to blob and trigger share/download
+  canvas.toBlob(blob=>{
+    if(navigator.share&&navigator.canShare){
+      const file=new File([blob],`75day-day${state.currentDay}.png`,{type:'image/png'});
+      navigator.share({files:[file],title:'75 Day Challenge',text:`Day ${state.currentDay} of 75. No excuses.`}).catch(()=>{
+        downloadBlob(blob);
+      });
+    }else{
+      downloadBlob(blob);
+    }
+  },'image/png');
+}
+
+function downloadBlob(blob){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`75day-day${state.currentDay}.png`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════
+// WEEKLY RECAP
+// ═══════════════════════════════════════
+function buildWeeklyRecap(){
+  // Show recap on days 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 75
+  const day=state.currentDay;
+  const weekNum=Math.floor((day-1)/7);
+  if(weekNum<1)return '';
+  const isRecapDay=(day-1)%7===0; // Show on first day of new week (looking back)
+  if(!isRecapDay&&day!==75)return '';
+
+  // Calculate last 7 days stats
+  const startDay=Math.max(1,day-7);
+  let weekSteps=0,weekComplete=0,weekJournals=[];
+  for(let d=startDay;d<day;d++){
+    const ds=dateForDayNum(d);
+    const dd=state.days[ds];
+    if(dd){
+      if(dd.steps==='10k')weekSteps+=10000;
+      else if(dd.steps==='5k')weekSteps+=5000;
+      if(isDayComplete(dd))weekComplete++;
+    }
+    if(state.journal&&state.journal[ds])weekJournals.push(state.journal[ds]);
+  }
+
+  const weekDays=Math.min(7,day-startDay);
+  const pct=weekDays>0?Math.round((weekComplete/weekDays)*100):0;
+  const kmWeek=Math.round(weekSteps*0.0008*10)/10;
+
+  let journalSnippet='';
+  if(weekJournals.length>0){
+    const latest=weekJournals[weekJournals.length-1];
+    journalSnippet=`<div class="recap-journal">"${esc(latest.length>80?latest.slice(0,80)+'…':latest)}"</div>`;
+  }
+
+  return `<div class="recap">
+    <div class="recap-title">Week ${weekNum} Recap</div>
+    <div class="recap-grid">
+      <div class="recap-stat"><div class="recap-stat-num" style="color:#30D158">${weekComplete}/${weekDays}</div><div class="recap-stat-lbl">Days done</div></div>
+      <div class="recap-stat"><div class="recap-stat-num" style="color:#FF9500">${weekSteps.toLocaleString()}</div><div class="recap-stat-lbl">Steps</div></div>
+      <div class="recap-stat"><div class="recap-stat-num" style="color:#5AC8FA">${kmWeek}</div><div class="recap-stat-lbl">km walked</div></div>
+    </div>
+    ${journalSnippet}
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// WELCOME
+// ═══════════════════════════════════════
+function renderWelcome(){
+  const app=document.getElementById('app');
+  app.innerHTML=`
+    <div class="welcome">
+      <div class="welcome-ring">
+        <svg viewBox="0 0 100 100">
+          <defs><linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF2D55"/><stop offset="100%" stop-color="#FF9500"/></linearGradient></defs>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,45,85,0.15)" stroke-width="8" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="url(#wg)" stroke-width="8" stroke-dasharray="${2*Math.PI*40}" stroke-dashoffset="${2*Math.PI*40*0.25}" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        </svg>
+      </div>
+      <div class="welcome-logo">75</div>
+      <div class="welcome-sub">Day Challenge</div>
+      <p class="welcome-tag">75 days of discipline. Diet. Steps. Gym. Protein. Miss one day — you start over.</p>
+      <div class="welcome-form">
+        <input class="welcome-field" id="wName" type="text" placeholder="Your name" autocomplete="off" maxlength="30">
+        <input class="welcome-field" id="wWeight" type="number" step="0.1" inputmode="decimal" placeholder="Current weight (kg)">
+        <button class="welcome-btn" onclick="submitWelcome()">Start the Challenge</button>
+        <div class="welcome-skip" onclick="skipWelcome()">Skip for now</div>
+      </div>
+    </div>`;
+  setTimeout(()=>{const el=document.getElementById('wName');if(el)el.focus()},100);
+}
+
+function submitWelcome(){
+  const name=(document.getElementById('wName').value||'').trim();
+  const weight=parseFloat(document.getElementById('wWeight').value);
+  profile={name:name||'Warrior'};
+  saveProfile();
+  if(weight>0&&weight<500){state.currentWeight=weight;recordWeight(weight);save()}
+  render();
+}
+
+function skipWelcome(){profile={name:'Warrior'};saveProfile();render()}
+
+// ═══════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════
+function openProfile(){editingWeight=false;editingJournal=false;showProfile=true;render();
+  setTimeout(()=>{const el=document.getElementById('pName');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}},100);
+}
+function closeProfile(){showProfile=false;render()}
+
+function saveProfileEdit(){
+  const name=(document.getElementById('pName').value||'').trim();
+  const weight=parseFloat(document.getElementById('pWeight').value);
+  if(!profile)profile={name:'Warrior'};
+  profile.name=name||'Warrior';
+  saveProfile();
+  if(weight>0&&weight<500){state.currentWeight=weight;recordWeight(weight);save()}
+  showProfile=false;render();
+}
+
+function resetEverything(){
+  if(confirm('This will erase ALL your data and start fresh. Are you sure?')){
+    localStorage.removeItem(STORAGE);localStorage.removeItem(PROFILE_KEY);
+    state=defaultState();profile=null;showProfile=false;showReset=false;viewingDate=null;
+    editingWeight=false;editingJournal=false;stopCountdown();
+    renderWelcome();
+  }
+}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function render(){
+  stopCountdown();
+  if(!profile){renderWelcome();return}
+
+  scrollY=window.scrollY;
+  const app=document.getElementById('app');
+  const today=TODAY();
+  const activeDate=getActiveDate();
+  const isToday=activeDate===today;
+  const canEdit=isEditable(activeDate);
+
+  // Which day number is the active date?
+  const activeDayNum=daysBetween(state.startDate,activeDate)+1;
+
+  const td=state.days[activeDate]||{diet:false,steps:'none',workout:false,protein:false};
+  const stepsOk=td.steps==='10k'||td.steps==='5k';
+  const allDone=td.diet&&stepsOk&&td.workout&&td.protein;
+  const tc=[td.diet,stepsOk,td.workout,td.protein].filter(Boolean).length;
+  const qi=(state.currentDay-1)%Q.length;
+
+  // ── Completion ──
+  if(state.completed){
+    app.innerHTML=`
+      ${showConfetti?'<div class="confetti-box" id="cbox"></div>':''}
+      <div class="complete">
+        <div class="complete-trophy">🏆</div>
+        <div class="complete-label">Challenge Complete</div>
+        <div class="complete-title">75 Days of<br>Discipline</div>
+        <div class="complete-sub">${safeName()}, you're not the same<br>person who started this.</div>
+        <button class="complete-restart" onclick="restartAfterComplete()">Start New Challenge</button>
+      </div>`;
+    if(showConfetti)spawnConfetti();
+    return;
+  }
+
+  // ── Ring math (always shows current day progress) ──
+  const pct=Math.max(((state.currentDay-1)/75)*100,1.5);
+  const R=80,STK=14,C=2*Math.PI*R,off=C-(pct/100)*C;
+  // Inner ring shows active date's task completion
+  const taskPct=(tc/4)*100,R2=62,C2=2*Math.PI*R2,off2=C2-(taskPct/100)*C2;
+
+  // ── Profile bar ──
+  const initial=((profile&&profile.name)||'W').charAt(0).toUpperCase();
+  const profileHTML=`
+    <div class="profile-bar" onclick="openProfile()">
+      <div class="profile-avatar">${initial}</div>
+      <div class="profile-name">${safeName()}</div>
+      <div class="profile-edit-icon">Edit ›</div>
+    </div>`;
+
+  // ── Profile sheet ──
+  const sheetHTML=showProfile?`
+    <div class="sheet-bg" onclick="if(event.target===this)closeProfile()">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">Edit Profile</div>
+        <div class="sheet-label">Name</div>
+        <input class="sheet-input" id="pName" type="text" value="${esc((profile&&profile.name)||'Warrior')}" maxlength="30" autocomplete="off">
+        <div class="sheet-label">Weight (kg)</div>
+        <input class="sheet-input" id="pWeight" type="number" step="0.1" inputmode="decimal" value="${state.currentWeight||''}" placeholder="Not set">
+        <div class="sheet-row">
+          <button class="sheet-cancel" onclick="closeProfile()">Cancel</button>
+          <button class="sheet-save" onclick="saveProfileEdit()">Save</button>
+        </div>
+        <button class="sheet-danger" onclick="resetEverything()">Reset Everything</button>
+      </div>
+    </div>`:'';
+
+  // ── Day nav (when viewing non-today) ──
+  const dayNavHTML=!isToday?`
+    <div class="day-nav">
+      <div>
+        <div class="day-nav-label">Day ${activeDayNum} · ${formatDate(activeDate)}</div>
+        <div class="day-nav-sub">${canEdit?'You can edit this day':'View only'}</div>
+      </div>
+      <button class="day-nav-back" onclick="backToToday()">← Today</button>
+    </div>`:'';
+
+  // ── Weight section (only on today view) ──
+  let weightHTML='';
+  if(isToday){
+    if(editingWeight){
+      weightHTML=`<div class="weight-input-wrap">
+        <input class="weight-input" id="wInput" type="number" step="0.1" inputmode="decimal" placeholder="${state.currentWeight||'e.g. 85.0'}" value="${state.currentWeight||''}"
+          onkeydown="if(event.key==='Enter')saveWeight();if(event.key==='Escape'){editingWeight=false;render()}">
+        <button class="weight-save-btn" onclick="saveWeight()">Save</button>
+        <button class="weight-save-btn" onclick="editingWeight=false;render()" style="background:rgba(255,255,255,0.1)">✕</button>
+      </div>`;
+    }else if(!state.currentWeight){
+      weightHTML=`<div class="weight-prompt" onclick="startWeightEdit()">
+        <div class="weight-prompt-title">Tap to set your weight</div>
+        <div class="weight-prompt-sub">Unlock the 1kg burn tracker</div>
+      </div>`;
+    }else{
+      const w=state.currentWeight;
+      const totalStepsAll=calcTotalSteps();
+      // Rough calories from steps (0.04 cal/step is conservative avg)
+      const calFromSteps=Math.round(totalStepsAll*0.04);
+      const kmWalked=Math.round(totalStepsAll*0.0008*10)/10; // ~0.8m per step avg
+
+      weightHTML=`<div class="weight-card">
+        <div class="weight-row">
+          <div><div class="weight-lbl">Current</div><div class="weight-val" onclick="startWeightEdit()">${w}<span class="weight-unit"> kg</span></div></div>
+          <div class="weight-goal"><div class="weight-lbl">Steps total</div><div class="weight-goal-val" style="color:#FF9500">${totalStepsAll.toLocaleString()}</div></div>
+        </div>
+        <div class="burn-box">
+          <div class="burn-stats">
+            <div><div class="burn-num">${kmWalked.toLocaleString()}</div><div class="burn-sub">km walked</div></div>
+            <div class="burn-right"><div class="burn-num burn-orange">~${calFromSteps.toLocaleString()}</div><div class="burn-sub">cal burned (est)</div></div>
+          </div>
+        </div>
+        ${buildSparklineSVG(getWeightHistory())}
+      </div>`;
+    }
+  }
+
+  // ── Stats dashboard ──
+  const st=getStats();
+  const statsHTML=(state.currentDay>1||st.totalDays>0)?`
+    <div class="stats">
+      <div class="stats-title">Your Numbers</div>
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-num green">${st.completionPct}%</div><div class="stat-lbl">Days completed</div></div>
+        <div class="stat-item"><div class="stat-num blue">${st.daysLeft}</div><div class="stat-lbl">Days remaining</div></div>
+        <div class="stat-item"><div class="stat-num orange">${st.completedDays}</div><div class="stat-lbl">Days crushed</div></div>
+        <div class="stat-item"><div class="stat-num pink">${st.journalCount}</div><div class="stat-lbl">Journal entries</div></div>
+      </div>
+    </div>`:'';
+
+  // ── Journal timeline ──
+  const timelineHTML=buildJournalTimeline();
+
+  // ── Heatmap ──
+  let dots='';
+  for(let i=0;i<75;i++){
+    const ds=dateForDayNum(i+1);
+    const isCur=(i+1===state.currentDay)&&ds===today;
+    const isPast=i+1<state.currentDay;
+    const isFuture=i+1>state.currentDay;
+    const isSelected=ds===activeDate&&!isToday;
+    let cls='dot';
+    if(isCur)cls='dot now';
+    else if(isPast)cls=isDayComplete(state.days[ds])?'dot ok':'dot miss';
+    if(isSelected)cls+=' selected';
+    if(isFuture)cls+=' future';
+    // Only make past/current dots tappable
+    const ariaStatus=isCur?'current':isPast?(isDayComplete(state.days[ds])?'completed':'missed'):'future';
+    if(!isFuture){
+      dots+=`<div class="${cls}" onclick="viewDay(${i+1})" role="button" aria-label="Day ${i+1}, ${ariaStatus}"></div>`;
+    }else{
+      dots+=`<div class="${cls}" aria-label="Day ${i+1}, future"></div>`;
+    }
+  }
+
+  // ── Streak ──
+  const streakLbl=state.currentDay<10?'Building momentum':state.currentDay<30?'Getting dangerous':state.currentDay<60?'Unstoppable':'Legendary';
+
+  // ── Tasks section ──
+  const checkSVG='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>';
+  const ro=canEdit?'':'readonly';
+  const tasksHeader=isToday
+    ?`<div class="tasks-title">Today's Mission</div><div class="tasks-date">${formatDate(today)}</div>`
+    :`<div class="tasks-title">Day ${activeDayNum}</div><div class="tasks-date">${formatDate(activeDate)}</div>`;
+
+  const tasksHTML=`
+    <div class="tasks-card">
+      <div class="tasks-hdr">${tasksHeader}</div>
+      ${!canEdit?'<div class="tasks-readonly">Read only — tap a recent day to edit</div>':''}
+
+      <div class="task-row ${ro}" onclick="${canEdit?`update('diet',${!td.diet})`:''}" ${canEdit?'':'style="cursor:default"'}>
+        <div class="task-icon-box ${td.diet?'green':''}">🥗</div>
+        <div class="task-name ${td.diet?'done':''}">Clean Diet</div>
+        <div class="task-check ${td.diet?'green':''}">${td.diet?checkSVG:''}</div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-top">
+          <div class="task-icon-box" style="background:${td.steps==='10k'?'#30D158':td.steps==='5k'?'#FFD60A':'rgba(255,255,255,0.08)'}">🚶</div>
+          <div class="task-name ${stepsOk?'done':''}">Steps</div>
+          ${stepsOk?`<span class="step-badge" style="color:${td.steps==='10k'?'#30D158':'#FFD60A'}">${td.steps==='10k'?'10K':'5K'}</span>`:''}
+        </div>
+        <div class="step-btns">
+          <button class="step-btn ${td.steps==='10k'?'g':''}" onclick="${canEdit?`toggleStep('${td.steps==='10k'?'none':'10k'}')`:''}" ${canEdit?'':'disabled'}>10,000+</button>
+          <button class="step-btn ${td.steps==='5k'?'y':''}" onclick="${canEdit?`toggleStep('${td.steps==='5k'?'none':'5k'}')`:''}" ${canEdit?'':'disabled'}>5,000+</button>
+        </div>
+      </div>
+
+      <div class="task-row ${ro}" onclick="${canEdit?`update('workout',${!td.workout})`:''}" ${canEdit?'':'style="cursor:default"'}>
+        <div class="task-icon-box ${td.workout?'green':''}">🏋️</div>
+        <div class="task-name ${td.workout?'done':''}">Gym Session</div>
+        <div class="task-check ${td.workout?'green':''}">${td.workout?checkSVG:''}</div>
+      </div>
+
+      <div class="task-row ${ro}" onclick="${canEdit?`update('protein',${!td.protein})`:''}" ${canEdit?'':'style="cursor:default"'}>
+        <div class="task-icon-box ${td.protein?'blue':''}">🫘</div>
+        <div class="task-name ${td.protein?'done':''}">100g Protein</div>
+        <div class="task-check ${td.protein?'blue':''}">${td.protein?checkSVG:''}</div>
+      </div>
+    </div>`;
+
+  // ── Countdown timer (only on today, only if tasks not done) ──
+  let countdownHTML='';
+  if(isToday&&!allDone){
+    const c=getCountdown();
+    const cls=c.h<2?'red':c.h<6?'orange':'green';
+    countdownHTML=`<div class="countdown">
+      <div id="countdownTime" class="countdown-time ${cls}">${formatCountdown()}</div>
+      <div class="countdown-lbl">before midnight to complete today</div>
+    </div>`;
+  }
+
+  // ── Milestone ──
+  let milestoneHTML='';
+  if(isToday&&MILESTONES[state.currentDay]){
+    const ms=MILESTONES[state.currentDay];
+    milestoneHTML=`<div class="milestone">
+      <div class="milestone-emoji">${ms.emoji}</div>
+      <div class="milestone-title">${ms.title}</div>
+      <div class="milestone-sub">${ms.sub}</div>
+    </div>`;
+  }
+
+  // ── Done banner ──
+  let doneHTML='';
+  if(allDone&&isToday){
+    const nextDay=state.currentDay+1;
+    doneHTML=`<div class="done-banner">
+      <div class="done-emoji">✅</div>
+      <div class="done-text">Day ${state.currentDay} Complete</div>
+      <div class="done-sub">You crushed it, ${safeName()}.</div>
+      ${state.currentDay<75?`<div class="done-next">Day ${nextDay} unlocks tomorrow →</div>`:''}
+    </div>`;
+  }else if(allDone&&!isToday){
+    doneHTML=`<div class="done-banner">
+      <div class="done-emoji">✅</div>
+      <div class="done-text">Day ${activeDayNum} — All done</div>
+    </div>`;
+  }
+
+  // ── Journal ──
+  if(!state.journal)state.journal={};
+  let journalHTML='';
+  const activeJournal=state.journal[activeDate]||'';
+
+  if(allDone&&canEdit){
+    // Show journal input/display for completed editable days
+    if(editingJournal||(!activeJournal&&isToday)){
+      journalHTML=`<div class="journal">
+        <div class="journal-label">One line about today</div>
+        <input class="journal-input" id="journalInput" type="text" maxlength="200"
+          value="${esc(activeJournal)}"
+          placeholder="How did it feel? What pushed you?"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+          onblur="saveJournal()">
+      </div>`;
+    }else if(activeJournal){
+      journalHTML=`<div class="journal">
+        <div class="journal-label">Your note</div>
+        <div class="journal-saved">"${esc(activeJournal)}"</div>
+        <div class="journal-edit" onclick="startJournalEdit()">Edit</div>
+      </div>`;
+    }
+  }else if(activeJournal&&!canEdit){
+    // Read-only journal for past days
+    journalHTML=`<div class="journal">
+      <div class="journal-label">Your note</div>
+      <div class="journal-saved">"${esc(activeJournal)}"</div>
+    </div>`;
+  }
+
+  // ── Weekly recap ──
+  const recapHTML=isToday?buildWeeklyRecap():'';
+
+  // ── Share button (only on today after day 1) ──
+  const shareHTML=(isToday&&state.currentDay>1)?`
+    <button class="share-btn" onclick="generateShareCard()">📤 Share Your Progress</button>`:'';
+
+  // ── Build HTML ──
+  app.innerHTML=`
+    ${sheetHTML}
+    ${showReset?`<div class="modal-bg"><div class="modal-box">
+      <div class="modal-emoji">💀</div><div class="modal-title">RESET</div>
+      <div class="modal-desc">${safeName()}, you missed a day.<br>Back to Day 1.</div>
+      <button class="modal-btn red" onclick="resetChallenge()">Restart Challenge</button>
+    </div></div>`:''}
+    ${showConfetti?'<div class="confetti-box" id="cbox"></div>':''}
+    <div class="container"><div class="inner">
+      ${profileHTML}
+      <div class="header">
+        <div><div class="header-title">75 Day</div><div class="header-title orange">Challenge</div></div>
+        ${state.resets>0?`<div class="reset-badge">${state.resets}x reset</div>`:''}
+      </div>
+
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF2D55"/><stop offset="100%" stop-color="#FF9500"/></linearGradient>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#30D158"/><stop offset="100%" stop-color="#63E6BE"/></linearGradient>
+            <filter id="gl"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle cx="100" cy="100" r="${R}" fill="none" stroke="rgba(255,45,85,0.15)" stroke-width="${STK}"/>
+          <circle cx="100" cy="100" r="${R}" fill="none" stroke="url(#g1)" stroke-width="${STK}" stroke-dasharray="${C}" stroke-dashoffset="${off}" stroke-linecap="round" filter="url(#gl)" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)"/>
+          <circle cx="100" cy="100" r="${R2}" fill="none" stroke="rgba(48,209,88,0.12)" stroke-width="${STK}"/>
+          <circle cx="100" cy="100" r="${R2}" fill="none" stroke="url(#g2)" stroke-width="${STK}" stroke-dasharray="${C2}" stroke-dashoffset="${off2}" stroke-linecap="round" style="transition:stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1)"/>
+        </svg>
+        <div class="ring-center"><div class="ring-day">${state.currentDay}</div><div class="ring-sub">of 75</div></div>
+      </div>
+
+      ${state.currentDay>1?`<div class="streak"><div class="streak-inner"><span class="streak-fire">🔥</span><span class="streak-count">${state.currentDay-1} day streak</span><span class="streak-label">${streakLbl}</span></div></div>`:''}
+
+      <div class="quote">
+        <p class="quote-text">"${Q[qi].t}"</p>
+        <p class="quote-author">${Q[qi].a}</p>
+      </div>
+
+      ${countdownHTML}
+      ${recapHTML}
+      ${milestoneHTML}
+      ${dayNavHTML}
+      ${weightHTML}
+      ${tasksHTML}
+      ${doneHTML}
+      ${journalHTML}
+      ${shareHTML}
+      ${isToday?statsHTML:''}
+
+      <div class="heatmap"><div class="heatmap-title">Journey · tap a day to view</div><div class="heatmap-grid">${dots}</div></div>
+      ${timelineHTML}
+      <div class="footer">${state.resets===0?'First attempt. Make it count.':`Attempt ${state.resets+1}. This time is different.`}</div>
+    </div></div>`;
+
+  if(showConfetti)spawnConfetti();
+  if(isToday&&!allDone)startCountdown();
+  window.scrollTo(0,scrollY);
+}
+
+function spawnConfetti(){
+  const c=document.getElementById('cbox');if(!c)return;
+  const colors=['#FF2D55','#FF9500','#30D158','#5AC8FA','#BF5AF2','#FFD60A'];
+  for(let i=0;i<50;i++){
+    const p=document.createElement('div');p.className='confetti-p';
+    const sz=5+Math.random()*7;
+    p.style.cssText=`left:${Math.random()*100}%;top:-10px;width:${sz}px;height:${sz*1.3}px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*0.6}s`;
+    p.addEventListener('animationend',()=>p.remove(),{once:true});
+    c.appendChild(p);
+  }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+initState();
+render();
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
 </body>
 </html>
